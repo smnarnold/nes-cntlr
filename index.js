@@ -11,6 +11,7 @@ function NESController(settings = {}) {
 
 	this.settings = {
 		virtual: 'auto',
+		location: 'body',
 		keys: {
 			start: 13,
 			select: 32,
@@ -20,7 +21,8 @@ function NESController(settings = {}) {
 			down: 40,
 			b: 65,
 			a: 83
-		}
+		},
+		zIndex: 100
 	};
 	$.extend( true, this.settings, settings );
 
@@ -43,8 +45,17 @@ function NESController(settings = {}) {
 	/* ---- */
 
 	this.init = () => {
-		this.initKeyboard();
+		this.bindEvents();
 		this.setVirtual();
+	};
+
+	this.bindEvents = () => {
+		this.dom.window
+			.on('orientationchange', e => this.orientationChange(e) )
+			.on('resize', td.debounce(300, e => this.resize(e)) );
+		this.dom.body
+			.on('keydown', e => this.keyAction(e, true) )
+			.on('keyup', e => this.keyAction(e, false) );
 	};
 
 	this.setVirtual = () => {
@@ -80,10 +91,6 @@ function NESController(settings = {}) {
 		this.bindTouchEvents();
 	};
 
-	this.initKeyboard = () => {
-		this.bindKeyboardEvents();
-	};
-
 	this.setControllerStyles = () => {
 		var css = `
 		.nes-cntlr {
@@ -96,6 +103,7 @@ function NESController(settings = {}) {
 			box-sizing: border-box;
 			justify-content: space-between;
 			perspective: 1000px;
+			z-index: ${this.settings.zIndex}
 		}
 		.nes-cntlr__d-pad { transition: transform 0.2s; }
 		.nes-cntlr__d-pad.is-up-left { transform: rotate3d(1, -1, 0, 8deg); }
@@ -142,7 +150,7 @@ function NESController(settings = {}) {
 				</svg>
 			</nav>`;
 
-		this.dom.body.append(controller);
+		document.querySelector(this.settings.location).insertAdjacentHTML('beforeend', controller);
 
 		$.extend( true, this.dom, {
 			dpad: $('.nes-cntlr__d-pad'),
@@ -159,9 +167,6 @@ function NESController(settings = {}) {
 	}
 
 	this.bindTouchEvents = () => {
-		this.dom.window
-			.on('orientationchange', e => this.orientationChange(e) )
-			.on('resize', td.debounce(300, e => this.resize(e)) );
 		this.dom.dpad
 			.on('touchstart touchmove', e => this.dpadMove(e) )
 			.on('touchend touchcancel', e => this.dpadEnd(e) );
@@ -308,12 +313,6 @@ function NESController(settings = {}) {
 	}
 
 	/* === Keyboard =============================================== */
-	this.bindKeyboardEvents = () => {
-		this.dom.body
-			.on('keydown', e => this.keyAction(e, true) )
-			.on('keyup', e => this.keyAction(e, false) );
-	};
-
 	this.keyAction = (e, status) => {
 		e = e || window.event;
 
