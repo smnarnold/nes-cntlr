@@ -1,12 +1,12 @@
+var _ = require('lodash');
+var merge = require('lodash.merge');
 var ua = require('ua-parser-js');
 var td = require('throttle-debounce');
 
 function NESController(settings = {}) {
 	this.ua = new ua().getResult();
 
-	this.dom = {
-		body: $('body')
-	};
+	this.dom = {};
 
 	this.settings = {
 		virtual: 'auto',
@@ -23,7 +23,8 @@ function NESController(settings = {}) {
 		},
 		zIndex: 100
 	};
-	$.extend( true, this.settings, settings );
+
+	this.settings = _.merge(this.settings, settings);
 
 	this.current = {
 		dpad: {
@@ -243,8 +244,11 @@ function NESController(settings = {}) {
 	};
 
 	this.triggerDirection = (direction, status) => {
-		if(direction !== null)
-			this.dom.body.trigger(`controller:${direction}`, {status: status});
+		if(direction !== null) {
+			let params = {status: status};
+			let event = window.CustomEvent ? new CustomEvent(`controller:${direction}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`controller:${direction}`, true, true, params);
+			document.body.dispatchEvent(event);
+		}
 		
 		if(this.virtual) {
 			this.dom.dpad.classList = 'nes-cntlr__cell nes-cntlr__d-pad';
@@ -292,8 +296,10 @@ function NESController(settings = {}) {
 	};
 
 	this.triggerBtn = (btn, status) => {
-		if(btn !== null){
-			this.dom.body.trigger(`controller:${btn}`, {status: status});
+		if(btn !== null) {
+			let params = {status: status};
+			let event = window.CustomEvent ? new CustomEvent(`controller:${btn}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`controller:${btn}`, true, true, params);
+			document.body.dispatchEvent(event);
 		}
 
 		if(this.virtual) {

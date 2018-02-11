@@ -40,7 +40,7 @@ nes-controller works on IE11+ in addition to other modern browsers such as Chrom
 
 #### Dependencies
 
-jQuery 3
+none
 
 #### License
 
