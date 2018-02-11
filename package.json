@@ -23,8 +23,6 @@
   },
   "homepage": "https://github.com/smnarnold/nes-controller#readme",
   "dependencies": {
-    "lodash": "^4.17.5",
-    "lodash.merge": "^4.6.1",
     "throttle-debounce": "^1.0.1"
   }
 }
