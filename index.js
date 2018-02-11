@@ -10,6 +10,7 @@ function NESController(settings = {}) {
 	};
 
 	this.settings = {
+		virtual: 'auto',
 		keys: {
 			start: 13,
 			select: 32,
@@ -37,12 +38,29 @@ function NESController(settings = {}) {
 	};
 
 	this.type = null;
+	this.virtual = false;
 
 	/* ---- */
 
 	this.init = () => {
-		this.resetStatus();
-		this.detectType();
+		this.initKeyboard();
+		this.setVirtual();
+	};
+
+	this.setVirtual = () => {
+		if(this.settings.virtual === 'always') {
+			this.virtual = true;
+			this.initTouch();
+		} else if(this.settings.virtual === 'never') {
+			this.virtual = false;
+		} else { // Auto
+			this.detectType();
+
+			if(this.type === 'touch') {
+				this.virtual = true;
+				this.initTouch();
+			}
+		}
 	};
 
 	this.detectType = () => {
@@ -51,14 +69,8 @@ function NESController(settings = {}) {
 		if(this.ua.device.type === 'mobile' || this.ua.device.type === 'tablet')
 			type = 'touch';
 
-		if(this.type !== type) {
+		if(this.type !== type)
 			this.type = type;
-
-			if(this.type === 'touch')
-				this.initTouch();
-			else
-				this.initKeyboard();
-		}
 	};
 
 	this.initTouch = () => {
@@ -230,12 +242,15 @@ function NESController(settings = {}) {
 	};
 
 	this.triggerDirection = (direction, status) => {
+		console.log(direction, status);
 		if(direction !== null)
 			this.dom.body.trigger(`controller:${direction}`, {status: status});
 		
-		this.dom.dpad.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
-		if(status)
-			this.dom.dpad.addClass(`is-${direction}`);
+		if(this.virtual) {
+			this.dom.dpad.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
+			if(status)
+				this.dom.dpad.addClass(`is-${direction}`);
+		}
 	}
 
 	/* --- Btns --- */
@@ -285,11 +300,12 @@ function NESController(settings = {}) {
 		if(btn !== null)
 			this.dom.body.trigger(`controller:${btn}`, {status: status});
 
-		this.dom.btns.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
-		if(status)
-			this.dom.btns.addClass(`is-${btn}`);
+		if(this.virtual) {
+			this.dom.btns.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
+			if(status)
+				this.dom.btns.addClass(`is-${btn}`);
+		}
 	}
-
 
 	/* === Keyboard =============================================== */
 	this.bindKeyboardEvents = () => {
@@ -303,50 +319,30 @@ function NESController(settings = {}) {
 
 		switch (e.keyCode) {
 			case this.settings.keys.start:
-				this.updateStatus('start', status);
+				this.triggerBtn('start', status);
 				break;
 			case this.settings.keys.select:
-				this.updateStatus('select', status);
+				this.triggerBtn('select', status);
 				break;
 			case this.settings.keys.left:
-				this.updateStatus('left', status);
+				this.triggerDirection('left', status);
 				break;
 			case this.settings.keys.up:
-				this.updateStatus('up', status);
+				this.triggerDirection('up', status);
 				break;
 			case this.settings.keys.right:
-				this.updateStatus('right', status);
+				this.triggerDirection('right', status);
 				break;
 			case this.settings.keys.down:
-				this.updateStatus('down', status);
+				this.triggerDirection('down', status);
 				break;
 			case this.settings.keys.b:
-				this.updateStatus('b', status);
+				this.triggerBtn('b', status);
 				break;
 			case this.settings.keys.a:
-				this.updateStatus('a', status);
+				this.triggerBtn('a', status);
 				break;
 		};
-	};
-
-	this.updateStatus = (key, status) => {
-		if(this.status[key] !== status) { // Flag to avoid multiple keydown events.
-			this.status[key] = status;
-			this.dom.body.trigger(`controller:${key}`, {status: status});
-		}
-	};
-
-	this.resetStatus = () => {
-		this.status = {
-			start: false,
-			select: false,
-			left: false,
-			up: false,
-			right: false,
-			down: false,
-			b: false,
-			a: false
-		}
 	};
 
 	this.init();
