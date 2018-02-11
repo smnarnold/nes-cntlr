@@ -4,7 +4,7 @@ _Javascript NES controller emulator for keyboards and touch devices_
 
 ### Events
 
-All event return a 'status' parameter that is either 'true' or 'false' depending if the button is pressed or released.
+All events return a 'status' parameter that is either 'true' or 'false' depending if the button is pressed or released. You can listen to those events for your game/project.
 
 Event | Params | Description
 ----- | ------ | -----------
@@ -30,3 +30,16 @@ location | string | body | Allows you to select where the virtual controller sho
 virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
 
+#### Browser support
+
+nes-controller works on IE11+ in addition to other modern browsers such as Chrome, Firefox, and Safari.
+
+#### Dependencies
+
+jQuery 3
+
+#### License
+
+Copyright (c) 2018 Simon Arnold
+
+Licensed under the MIT license.

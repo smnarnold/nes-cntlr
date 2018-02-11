@@ -5,7 +5,6 @@ function NESController(settings = {}) {
 	this.ua = new ua().getResult();
 
 	this.dom = {
-		window: $(window),
 		body: $('body')
 	};
 
@@ -50,12 +49,10 @@ function NESController(settings = {}) {
 	};
 
 	this.bindEvents = () => {
-		this.dom.window
-			.on('orientationchange', e => this.orientationChange(e) )
-			.on('resize', td.debounce(300, e => this.resize(e)) );
-		this.dom.body
-			.on('keydown', e => this.keyAction(e, true) )
-			.on('keyup', e => this.keyAction(e, false) );
+		window.addEventListener('orientationchange', e => this.orientationChange(e) );
+		window.addEventListener('resize', e => td.debounce(300, e => this.resize(e)) );
+		document.addEventListener('keydown', e => this.keyAction(e, true) );
+		document.addEventListener('keyup', e => this.keyAction(e, false) );
 	};
 
 	this.setVirtual = () => {
@@ -103,7 +100,7 @@ function NESController(settings = {}) {
 			box-sizing: border-box;
 			justify-content: space-between;
 			perspective: 1000px;
-			z-index: ${this.settings.zIndex}
+			z-index: ${this.settings.zIndex};
 		}
 		.nes-cntlr__d-pad { transition: transform 0.2s; }
 		.nes-cntlr__d-pad.is-up-left { transform: rotate3d(1, -1, 0, 8deg); }
@@ -121,8 +118,8 @@ function NESController(settings = {}) {
 		.nes-cntlr__btns.is-start .nes-cntlr__start { fill: #383d41; }
 		`;
 
-	    var head = document.head;
-	    var style = document.createElement('style');
+	    let head = document.head;
+	    let style = document.createElement('style');
 
     	style.type = 'text/css';
     	style.classList.add('nes-cntlr-styles')
@@ -152,27 +149,28 @@ function NESController(settings = {}) {
 
 		document.querySelector(this.settings.location).insertAdjacentHTML('beforeend', controller);
 
-		$.extend( true, this.dom, {
-			dpad: $('.nes-cntlr__d-pad'),
-			btns: $('.nes-cntlr__btns')
-		});
+		this.dom.nesCntlr = document.querySelector('.nes-cntlr');
+		this.dom.dpad = document.querySelector('.nes-cntlr__d-pad');
+		this.dom.btns = document.querySelector('.nes-cntlr__btns');
 	};
 
 	this.removeController = () => {
 		let styles = document.querySelector('.nes-cntlr-styles');
 		styles.parentNode.removeChild(styles);
 
-		let html = document.querySelector('.nes-cntlr');
-		html.parentNode.removeChild(html);
+		this.dom.nesCntlr.parentNode.removeChild(this.dom.nesCntlr);
 	}
 
 	this.bindTouchEvents = () => {
-		this.dom.dpad
-			.on('touchstart touchmove', e => this.dpadMove(e) )
-			.on('touchend touchcancel', e => this.dpadEnd(e) );
-		this.dom.btns
-			.on('touchstart touchmove', e => this.btnsMove(e) )
-			.on('touchend touchcancel', e => this.btnsEnd(e) );
+		this.dom.dpad.addEventListener('touchstart', e => this.dpadMove(e) );
+		this.dom.dpad.addEventListener('touchmove', e => this.dpadMove(e) );
+		this.dom.dpad.addEventListener('touchend', e => this.dpadEnd(e) );
+		this.dom.dpad.addEventListener('touchcancel', e => this.dpadEnd(e) );
+
+		this.dom.btns.addEventListener('touchstart', e => this.btnsMove(e) );
+		this.dom.btns.addEventListener('touchmove', e => this.btnsMove(e) );
+		this.dom.btns.addEventListener('touchend', e => this.btnsEnd(e) );
+		this.dom.btns.addEventListener('touchcancel', e => this.btnsEnd(e) );
 	}
 
 	this.orientationChange = e => {
@@ -182,23 +180,21 @@ function NESController(settings = {}) {
 	this.resize = () => {
 		this.current = {
 			dpad: {
-				top: this.dom.dpad.position().top,
-				left: this.dom.dpad.position().left
+				top: this.dom.dpad.getBoundingClientRect().y,
+				left: this.dom.dpad.getBoundingClientRect().x
 			},
 			btns: {
-				top: this.dom.btns.position().top,
-				left: this.dom.btns.position().left
+				top: this.dom.btns.getBoundingClientRect().y,
+				left: this.dom.btns.getBoundingClientRect().x
 			}
 		};
 	}
 
 	/* --- D-pad --- */
-	this.dpadMove = event => {
-		let e = event.originalEvent;
-		let touch = e.touches[0];
-		let posX = touch.pageX - this.current.dpad.left;
-		let posY = touch.pageY - this.current.dpad.top;
+	this.dpadMove = e => {
 		e.preventDefault();
+		let posX = e.touches[0].pageX - this.current.dpad.left;
+		let posY = e.touches[0].pageY - this.current.dpad.top;
 
 		if(posX >= 0 && posX <= 85 && posX && posY >= 0 && posY <= 88) {
 			if(posX < 28) { // Left
@@ -247,37 +243,31 @@ function NESController(settings = {}) {
 	};
 
 	this.triggerDirection = (direction, status) => {
-		console.log(direction, status);
 		if(direction !== null)
 			this.dom.body.trigger(`controller:${direction}`, {status: status});
 		
 		if(this.virtual) {
-			this.dom.dpad.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
+			this.dom.dpad.classList = 'nes-cntlr__cell nes-cntlr__d-pad';
 			if(status)
-				this.dom.dpad.addClass(`is-${direction}`);
+				this.dom.dpad.classList.add(`is-${direction}`);
 		}
 	}
 
 	/* --- Btns --- */
-	this.btnsMove = event => {
-		let e = event.originalEvent;
-		let touch = e.touches[0];
-		let posX = touch.pageX - this.current.btns.left;
-		let posY = touch.pageY - this.current.btns.top;
+	this.btnsMove = e => {
 		e.preventDefault();
+		let posX = e.touches[0].pageX - this.current.btns.left;
+		let posY = e.touches[0].pageY - this.current.btns.top;
 
 		if(posX >= 0 && posX <= 100 && posY >= 28 && posY <= 107) {
-			if(posY < 77) { // first row
-				if(posX < 50)
-					this.setTouchBtns('b', true);
-				else
-					this.setTouchBtns('a', true);
-			} else { // second row
-				if(posX < 50)
-					this.setTouchBtns('select', true);
-				else
-					this.setTouchBtns('start', true);
-			}
+			let btn = null;
+
+			if(posY < 77) // first row
+				btn = posX < 50 ? 'b' : 'a';
+			else // second row
+				btn = posX < 50 ? 'select' : 'start';
+
+			this.setTouchBtns(btn, true);
 		} else
 			this.setTouchBtns();
 	}
@@ -302,13 +292,14 @@ function NESController(settings = {}) {
 	};
 
 	this.triggerBtn = (btn, status) => {
-		if(btn !== null)
+		if(btn !== null){
 			this.dom.body.trigger(`controller:${btn}`, {status: status});
+		}
 
 		if(this.virtual) {
-			this.dom.btns.removeClass(function(index, className) {return (className.match (/(^|\s)is-\S+/g) || []).join(' ')});
+			this.dom.btns.classList = 'nes-cntlr__cell nes-cntlr__btns';
 			if(status)
-				this.dom.btns.addClass(`is-${btn}`);
+				this.dom.btns.classList.add(`is-${btn}`);
 		}
 	}
 
