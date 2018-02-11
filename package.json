@@ -1,0 +1,29 @@
+{
+  "name": "nes-controller",
+  "version": "1.0.0",
+  "description": "Javascript NES controller emulator for keyboards and touch devices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smnarnold/nes-controller.git"
+  },
+  "keywords": [
+    "Nintendo",
+    "NES",
+    "Controller",
+    "Retro"
+  ],
+  "author": "Simon Arnold",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smnarnold/nes-controller/issues"
+  },
+  "homepage": "https://github.com/smnarnold/nes-controller#readme",
+  "dependencies": {
+    "throttle-debounce": "^1.0.1",
+    "ua-parser-js": "^0.7.17"
+  }
+}
