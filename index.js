@@ -1,11 +1,9 @@
-var _ = require('lodash');
-var merge = require('lodash.merge');
-var td = require('throttle-debounce');
+var td = require('throttle-debounce/debounce');
 
 function NESController(settings = {}) {
 	this.dom = {};
 
-	this.settings = {
+	this.defaultSettings = {
 		virtual: 'auto',
 		location: 'body',
 		keys: {
@@ -21,7 +19,7 @@ function NESController(settings = {}) {
 		zIndex: 100
 	};
 
-	this.settings = _.merge(this.settings, settings);
+	this.userSettings = settings;
 
 	this.current = {
 		dpad: {
@@ -42,9 +40,46 @@ function NESController(settings = {}) {
 	/* ---- */
 
 	this.init = () => {
+		this.setFallbacks();
+		this.setSettings();
 		this.bindEvents();
 		this.setVirtual();
 	};
+
+	this.setFallbacks = () => {
+		// Object assign 
+		if (typeof Object.assign != 'function')
+			this.setObjectAssign();
+	};
+
+	this.setObjectAssign = () => {
+		Object.assign = function(target, varArgs) {
+			'use strict';
+			if (target == null) { // TypeError if undefined or null
+				throw new TypeError('Cannot convert undefined or null to object');
+			}
+
+			var to = Object(target);
+
+			for (var index = 1; index < arguments.length; index++) {
+				var nextSource = arguments[index];
+
+			    if (nextSource != null) { // Skip over if undefined or null
+				  	for (var nextKey in nextSource) {
+						// Avoid bugs when hasOwnProperty is shadowed
+						if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+							to[nextKey] = nextSource[nextKey];
+						}
+				    }
+				}
+			}
+			return to;
+		};
+	}
+
+	this.setSettings = () => {
+		this.settings = Object.assign({}, this.defaultSettings, this.userSettings);
+	}
 
 	this.bindEvents = () => {
 		window.addEventListener('orientationchange', e => this.orientationChange(e) );
@@ -75,9 +110,6 @@ function NESController(settings = {}) {
 		if ('ontouchstart' in document.documentElement)
 			type = 'touch';
 
-		// if(this.ua.device.type === 'mobile' || this.ua.device.type === 'tablet')
-		// 	type = 'touch';
-
 		if(this.type !== type)
 			this.type = type;
 	};
@@ -90,7 +122,7 @@ function NESController(settings = {}) {
 	};
 
 	this.setControllerStyles = () => {
-		var css = `
+		let css = `
 		.nes-cntlr {
 			position: fixed;
 			bottom: 0;
