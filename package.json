@@ -25,7 +25,6 @@
   "dependencies": {
     "lodash": "^4.17.5",
     "lodash.merge": "^4.6.1",
-    "throttle-debounce": "^1.0.1",
-    "ua-parser-js": "^0.7.17"
+    "throttle-debounce": "^1.0.1"
   }
 }

@@ -1,11 +1,8 @@
 var _ = require('lodash');
 var merge = require('lodash.merge');
-var ua = require('ua-parser-js');
 var td = require('throttle-debounce');
 
 function NESController(settings = {}) {
-	this.ua = new ua().getResult();
-
 	this.dom = {};
 
 	this.settings = {
@@ -75,8 +72,11 @@ function NESController(settings = {}) {
 	this.detectType = () => {
 		let type = 'keyboard';
 
-		if(this.ua.device.type === 'mobile' || this.ua.device.type === 'tablet')
+		if ('ontouchstart' in document.documentElement)
 			type = 'touch';
+
+		// if(this.ua.device.type === 'mobile' || this.ua.device.type === 'tablet')
+		// 	type = 'touch';
 
 		if(this.type !== type)
 			this.type = type;
