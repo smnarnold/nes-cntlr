@@ -2,6 +2,10 @@ nes-controller
 -------
 _Javascript NES controller emulator for keyboards and touch devices_
 
+Allow you to use your keyboard and/or a vitual NES Controller _(for touch devices)_ to control whatever you create like you would with a NES emulator.
+
+![alt text](https://i.imgur.com/fR0uKUQ.png "NES Controller")
+
 ### Events
 
 All events return a 'status' parameter that is either 'true' or 'false' depending if the button is pressed or released. You can listen to those events for your game/project.
