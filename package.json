@@ -2,7 +2,7 @@
   "name": "nes-controller",
   "version": "1.0.0",
   "description": "Javascript NES controller emulator for keyboards and touch devices",
-  "main": "nes/cntlr.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack --watch",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/smnarnold/nes-controller#readme",
   "dependencies": {
+    "object-assign": "^4.1.1",
     "throttle-debounce": "^1.0.1"
   },
   "devDependencies": {

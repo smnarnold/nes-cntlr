@@ -29,8 +29,10 @@ controller:a | status | A button
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
+colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Default, default active, highlight, highlight active, border
 keys | object | {start: 13, select: 32, left: 37, up: 38, right: 39, down: 40, b: 65, a: 83} | keys mapping.
-location | string | body | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
+location | string | 'body' | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
+prefix | string | 'nes-cntlr' | Class prefix
 virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
 
