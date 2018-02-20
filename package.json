@@ -1,5 +1,5 @@
 {
-  "name": "nes-controller",
+  "name": "nes-cntlr",
   "version": "1.0.0",
   "description": "Javascript NES controller emulator for keyboards and touch devices",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smnarnold/nes-controller.git"
+    "url": "git+https://github.com/smnarnold/nes-cntlr.git"
   },
   "keywords": [
     "Nintendo",
@@ -21,9 +21,9 @@
   "author": "Simon Arnold",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/smnarnold/nes-controller/issues"
+    "url": "https://github.com/smnarnold/nes-cntlr/issues"
   },
-  "homepage": "https://github.com/smnarnold/nes-controller#readme",
+  "homepage": "https://github.com/smnarnold/nes-cntlr#readme",
   "dependencies": {
     "object-assign": "^4.1.1",
     "throttle-debounce": "^1.0.1"
