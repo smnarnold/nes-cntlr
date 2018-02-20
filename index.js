@@ -39,6 +39,9 @@ class NESController {
 			}
 		};
 
+		this.keysMap = {};
+		this.timming = {};
+
 		this.showVirtualController = false;
 	}
 
@@ -78,6 +81,7 @@ class NESController {
 
 	keyAction(e, status) {
 		e = e || window.event;
+		this.keysMap[e.keyCode] = status;
 
 		switch (e.keyCode) {
 			case this.settings.keys.start:
@@ -86,18 +90,6 @@ class NESController {
 			case this.settings.keys.select:
 				this.triggerEvent(this.dom.btns, 'select', status);
 				break;
-			case this.settings.keys.left:
-				this.triggerEvent(this.dom.dpad, 'left', status);
-				break;
-			case this.settings.keys.up:
-				this.triggerEvent(this.dom.dpad, 'up', status);
-				break;
-			case this.settings.keys.right:
-				this.triggerEvent(this.dom.dpad, 'right', status);
-				break;
-			case this.settings.keys.down:
-				this.triggerEvent(this.dom.dpad, 'down', status);
-				break;
 			case this.settings.keys.b:
 				this.triggerEvent(this.dom.btns, 'b', status);
 				break;
@@ -105,6 +97,26 @@ class NESController {
 				this.triggerEvent(this.dom.btns, 'a', status);
 				break;
 		};
+
+		if (this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.left]) {
+            this.triggerEvent(this.dom.dpad, 'up-left', status);
+        } else if(this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.right]) {
+        	this.triggerEvent(this.dom.dpad, 'up-right', status);
+        } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.left]) {
+        	this.triggerEvent(this.dom.dpad, 'down-left', status);
+        } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.right]) {
+        	this.triggerEvent(this.dom.dpad, 'down-right', status);
+        } else if(this.keysMap[this.settings.keys.up]) {
+        	this.triggerEvent(this.dom.dpad, 'up', status);
+        } else if(this.keysMap[this.settings.keys.down]) {
+        	this.triggerEvent(this.dom.dpad, 'down', status);
+        } else if(this.keysMap[this.settings.keys.right]) {
+        	this.triggerEvent(this.dom.dpad, 'right', status);
+        } else if(this.keysMap[this.settings.keys.left]) {
+        	this.triggerEvent(this.dom.dpad, 'left', status);
+        } else {
+        	this.triggerEvent(this.dom.dpad, '', status);
+        }
 	}
 
 	createVirtualController() {
@@ -195,8 +207,9 @@ class NESController {
 				else
 					this.setTouchDirection('down-right', true);
 			}
-		} else
+		} else {
 			this.setTouchDirection();
+		}
 	}
 
 	dpadEnd() {
@@ -232,8 +245,9 @@ class NESController {
 				btn = posX < 50 ? 'select' : 'start';
 
 			this.setTouchBtns(btn, true);
-		} else
+		} else{
 			this.setTouchBtns();
+		}
 	}
 
 	btnsEnd() {
@@ -258,6 +272,13 @@ class NESController {
 	triggerEvent(el, btn, status) {
 		if(btn !== null) {
 			let params = {status: status};
+
+			if(status) {
+				this.timming[btn] = new Date();
+			} else {
+				params.duration = new Date() - this.timming[btn];
+			}
+
 			let event = window.CustomEvent ? new CustomEvent(`controller:${btn}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`controller:${btn}`, true, true, params);
 			document.body.dispatchEvent(event);
 		}
