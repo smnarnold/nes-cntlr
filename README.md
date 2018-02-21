@@ -22,33 +22,33 @@ All events return a _'pressed'_ parameter [bool: true|false]. On release, a _'du
 
 Event | Params | Description
 ----- | ------ | -----------
-cntlr:up | pressed | D-pad <kbd>↑</kbd>
-cntlr:up-right | pressed | D-pad <kbd>↗</kbd>
-cntlr:right | pressed | D-pad <kbd>→</kbd>
-cntlr:down-right | pressed | D-pad <kbd>↘</kbd>
-cntlr:down | pressed | D-pad <kbd>↓</kbd>
-cntlr:down-left | pressed | D-pad <kbd>↙</kbd>
-cntlr:left | pressed | D-pad <kbd>←</kbd>
-cntlr:up-left | pressed | D-pad <kbd>↖</kbd>
-cntlr:select | pressed | Select button
-cntlr:start | pressed | Start button
-cntlr:b | pressed | B button
-cntlr:a | pressed | A button
+cntlr:up | pressed, duration | D-pad <kbd>↑</kbd>
+cntlr:up-right | pressed, duration | D-pad <kbd>↗</kbd>
+cntlr:right | pressed, duration | D-pad <kbd>→</kbd>
+cntlr:down-right | pressed, duration | D-pad <kbd>↘</kbd>
+cntlr:down | pressed, duration | D-pad <kbd>↓</kbd>
+cntlr:down-left | pressed, duration | D-pad <kbd>↙</kbd>
+cntlr:left | pressed, duration | D-pad <kbd>←</kbd>
+cntlr:up-left | pressed, duration | D-pad <kbd>↖</kbd>
+cntlr:select | pressed, duration | Select button
+cntlr:start | pressed, duration | Start button
+cntlr:b | pressed, duration | B button
+cntlr:a | pressed, duration | A button
 
 ### Settings
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Default <span style="color: #2F3335">◼</span>, default active <span style="color: #383d41">◼</span>, highlight <span style="color: #AC3C66">◼</span>, highlight active <span style="color: #D64A80">◼</span>, border <span style="color: #B4B4B4">◼</span>
+colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Black, Light black, Red, Light red, Grey
 keys | object | {start: 13, select: 32, left: 37, up: 38, right: 39, down: 40, b: 65, a: 83} | keys mapping.
 location | string | 'body' | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
-prefix | string | 'nes-cntlr' | Class prefix
+prefix | string | 'nescntlr' | Class prefix
 virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
 
 #### Browser support
 
-nes-controller works on IE11+ in addition to other modern browsers such as Chrome, Firefox, and Safari.
+nes-cntlr works on IE11+ in addition to other modern browsers such as Chrome, Firefox, and Safari.
 
 #### Dependencies
 
