@@ -18,28 +18,28 @@ player1.init();
 
 ### Events
 
-All events return a 'status' parameter that is either 'true' or 'false' depending if the button is pressed or released. You can listen to those events for your game/project.
+All events return a _'pressed'_ parameter [bool: true|false]. On release, a _'duration'_ parameter [number: ms] will also be provided. <br>You can listen to those events for your game/project.
 
 Event | Params | Description
 ----- | ------ | -----------
-controller:up | status | D-pad up
-controller:up-right | status | D-pad up right
-controller:right | status | D-pad right
-controller:down-right | status | D-pad down right
-controller:down | status | D-pad down
-controller:up-left | status | D-pad up left
-controller:left | status | D-pad left
-controller:down-left | status | D-pad down left 
-controller:select | status | Select button
-controller:start | status | Start button
-controller:b | status | B button
-controller:a | status | A button
+cntlr:up | pressed | D-pad <kbd>↑</kbd>
+cntlr:up-right | pressed | D-pad <kbd>↗</kbd>
+cntlr:right | pressed | D-pad <kbd>→</kbd>
+cntlr:down-right | pressed | D-pad <kbd>↘</kbd>
+cntlr:down | pressed | D-pad <kbd>↓</kbd>
+cntlr:down-left | pressed | D-pad <kbd>↙</kbd>
+cntlr:left | pressed | D-pad <kbd>←</kbd>
+cntlr:up-left | pressed | D-pad <kbd>↖</kbd>
+cntlr:select | pressed | Select button
+cntlr:start | pressed | Start button
+cntlr:b | pressed | B button
+cntlr:a | pressed | A button
 
 ### Settings
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Default, default active, highlight, highlight active, border
+colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Default <span style="color: #2F3335">◼</span>, default active <span style="color: #383d41">◼</span>, highlight <span style="color: #AC3C66">◼</span>, highlight active <span style="color: #D64A80">◼</span>, border <span style="color: #B4B4B4">◼</span>
 keys | object | {start: 13, select: 32, left: 37, up: 38, right: 39, down: 40, b: 65, a: 83} | keys mapping.
 location | string | 'body' | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
 prefix | string | 'nes-cntlr' | Class prefix

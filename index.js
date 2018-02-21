@@ -1,8 +1,8 @@
 const debounce = require('throttle-debounce/debounce');
 const objectAssign = require('object-assign');
-const virtualController = require('./lib/VirtualController');
+const virtualCntlr = require('./lib/VirtualCntlr');
 
-class NESController {
+class NESCntlr {
     constructor(settings) {
     	this.dom = {};
 
@@ -19,7 +19,7 @@ class NESController {
 				a: 83
 			},
 			location: 'body',
-			prefix: 'nes-cntlr',
+			prefix: 'nescntlr',
 			virtual: 'auto',
 			zIndex: 100
 		};
@@ -42,39 +42,39 @@ class NESController {
 		this.keysMap = {};
 		this.timming = {};
 
-		this.showVirtualController = false;
+		this.showVirtualCntlr = false;
 	}
 
 	init() {
-		this.setVirtualController();
+		this.setVirtualCntlr();
 		this.bindEvents();
 	}
 
-	setVirtualController() {
+	setVirtualCntlr() {
 		switch (this.settings.virtual) {
 			case 'always':
-				this.showVirtualController = true;
-				this.createVirtualController();
+				this.showVirtualCntlr = true;
+				this.createVirtualCntlr();
 				break;
 			case 'never':
-				this.showVirtualController = false;
-				this.destroyVirtualController();
+				this.showVirtualCntlr = false;
+				this.destroyVirtualCntlr();
 				break;
 			default: // 'auto'
-				this.showVirtualController = false;
+				this.showVirtualCntlr = false;
 				if ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch)
-					this.showVirtualController = true;
+					this.showVirtualCntlr = true;
 
-				if(this.showVirtualController)
-					this.createVirtualController();
+				if(this.showVirtualCntlr)
+					this.createVirtualCntlr();
 				else
-					this.destroyVirtualController();
+					this.destroyVirtualCntlr();
 		};
 	}
 
 	bindEvents() {
-		window.addEventListener('orientationchange', e => this.resize(e) );
-		window.addEventListener('resize', e => debounce(300, e => this.resize(e)) );
+		window.addEventListener('orientationchange', e => this.refresh(e) );
+		window.addEventListener('resize', e => debounce(300, e => this.refresh(e)) );
 		document.addEventListener('keydown', e => this.keyAction(e, true) );
 		document.addEventListener('keyup', e => this.keyAction(e, false) );
 	}
@@ -119,29 +119,29 @@ class NESController {
         }
 	}
 
-	createVirtualController() {
+	createVirtualCntlr() {
 		if(typeof this.controller === 'undefined') {
-			this.controller = new virtualController(this.settings);
+			this.controller = new virtualCntlr(this.settings);
 			this.controller.create();
 
 			this.dom.dpad = document.querySelector(`.${this.settings.prefix}__d-pad`);
 			this.dom.btns = document.querySelector(`.${this.settings.prefix}__btns`);
 
-			this.setVirtualControllerPos();
+			this.setVirtualCntlrPos();
 			
 			this.dom.dpad.addEventListener('touchstart', e => this.dpadMove(e) );
 			this.dom.dpad.addEventListener('touchmove', e => this.dpadMove(e) );
-			this.dom.dpad.addEventListener('touchend', e => this.dpadEnd(e) );
-			this.dom.dpad.addEventListener('touchcancel', e => this.dpadEnd(e) );
+			this.dom.dpad.addEventListener('touchend', () => this.dpadEnd() );
+			this.dom.dpad.addEventListener('touchcancel', () => this.dpadEnd() );
 
 			this.dom.btns.addEventListener('touchstart', e => this.btnsMove(e) );
 			this.dom.btns.addEventListener('touchmove', e => this.btnsMove(e) );
-			this.dom.btns.addEventListener('touchend', e => this.btnsEnd(e) );
-			this.dom.btns.addEventListener('touchcancel', e => this.btnsEnd(e) );
+			this.dom.btns.addEventListener('touchend', () => this.btnsEnd() );
+			this.dom.btns.addEventListener('touchcancel', () => this.btnsEnd() );
 		}
 	}
 
-	destroyVirtualController() {
+	destroyVirtualCntlr() {
 		if(typeof this.controller !== 'undefined') {
 			this.controller.destroy();
 
@@ -159,12 +159,12 @@ class NESController {
 		}
 	}
 
-	resize() {
-		this.setVirtualController();
-		this.setVirtualControllerPos();
+	refresh() {
+		this.setVirtualCntlr();
+		this.setVirtualCntlrPos();
 	}
 
-	setVirtualControllerPos() {
+	setVirtualCntlrPos() {
 		if(this.dom.dpad && this.dom.btns) {
 			this.current = {
 				dpad: {
@@ -271,7 +271,7 @@ class NESController {
 
 	triggerEvent(el, btn, status) {
 		if(btn !== null) {
-			let params = {status: status};
+			let params = {pressed: status};
 
 			if(status) {
 				this.timming[btn] = new Date();
@@ -279,11 +279,11 @@ class NESController {
 				params.duration = new Date() - this.timming[btn];
 			}
 
-			let event = window.CustomEvent ? new CustomEvent(`controller:${btn}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`controller:${btn}`, true, true, params);
+			let event = window.CustomEvent ? new CustomEvent(`cntlr:${btn}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`cntlr:${btn}`, true, true, params);
 			document.body.dispatchEvent(event);
 		}
 
-		if(this.showVirtualController && el) {
+		if(this.showVirtualCntlr && el) {
 			el.classList = el.getAttribute('data-default-class');
 			if(status)
 				el.classList.add(`is-${btn}`);
@@ -292,12 +292,12 @@ class NESController {
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
-    module.exports = NESController;
+    module.exports = NESCntlr;
 else {
     if (typeof define === 'function' && define.amd) {
         define([], () => {
-            return NESController;
+            return NESCntlr;
         });
     } else
-        window.NESController = NESController;
+        window.NESCntlr = NESCntlr;
 }
