@@ -11,8 +11,8 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 ### Usage
 
 ```
-import NESController from 'nes-controller';
-let player1 = new NESController();
+import NESCntlr from 'nes-cntlr';
+let player1 = new NESCntlr();
 player1.init();
 ```
 
