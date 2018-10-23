@@ -75,13 +75,19 @@ class NESCntlr {
 	bindEvents() {
 		window.addEventListener('orientationchange', e => this.refresh(e) );
 		window.addEventListener('resize', e => debounce(300, e => this.refresh(e)) );
+		window.addEventListener('keydown', e => this.keys.pressed[e.keyCode] = true);
+		window.addEventListener('keyup', e => delete this.keys.pressed[e.keyCode]);
 		document.addEventListener('keydown', e => this.keyAction(e, true) );
 		document.addEventListener('keyup', e => this.keyAction(e, false) );
 	}
 
 	keyAction(e, status) {
 		e = e || window.event;
-		this.keysMap[e.keyCode] = status;
+
+		if(status)
+			this.keysMap[e.keyCode] = true;
+		else
+			delete this.keysMap[e.keyCode];
 
 		switch (e.keyCode) {
 			case this.settings.keys.start:
@@ -98,21 +104,21 @@ class NESCntlr {
 				break;
 		};
 
-		if (this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.left]) {
+		if (this.keysMap.includes(this.settings.keys.up) && this.keysMap.includes(this.settings.keys.left)) {
             this.triggerEvent(this.dom.dpad, 'up-left', status);
-        } else if(this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.right]) {
+		} else if (this.keysMap.includes(this.settings.keys.up) && this.keysMap.includes(this.settings.keys.right)) {
         	this.triggerEvent(this.dom.dpad, 'up-right', status);
-        } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.left]) {
+		} else if (this.keysMap.includes(this.settings.keys.down) && this.keysMap.includes(this.settings.keys.left)) {
         	this.triggerEvent(this.dom.dpad, 'down-left', status);
-        } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.right]) {
+		} else if (this.keysMap.includes(this.settings.keys.down) && this.keysMap.includes(this.settings.keys.right)) {
         	this.triggerEvent(this.dom.dpad, 'down-right', status);
-        } else if(this.keysMap[this.settings.keys.up]) {
+		} else if (this.keysMap.includes(this.settings.keys.up)) {
         	this.triggerEvent(this.dom.dpad, 'up', status);
-        } else if(this.keysMap[this.settings.keys.down]) {
+		} else if (this.keysMap.includes(this.settings.keys.down)) {
         	this.triggerEvent(this.dom.dpad, 'down', status);
-        } else if(this.keysMap[this.settings.keys.right]) {
+		} else if (this.keysMap.includes(this.settings.keys.right)) {
         	this.triggerEvent(this.dom.dpad, 'right', status);
-        } else if(this.keysMap[this.settings.keys.left]) {
+		} else if (this.keysMap.includes(this.settings.keys.left)) {
         	this.triggerEvent(this.dom.dpad, 'left', status);
         } else {
         	this.triggerEvent(this.dom.dpad, '', status);
