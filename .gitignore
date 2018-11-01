@@ -1,4 +1,15 @@
+# Cache files for Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
 
+# Workspace files are user-specific
+*.sublime-workspace
+
+# proportion of contributors will probably not be using Sublime Text
+*.sublime-project
+
+# folders
 /dist
 /tmp
 /out-tsc

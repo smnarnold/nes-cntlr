@@ -4,11 +4,25 @@ const path = require('path')
 
 const config = {
   context: path.resolve(__dirname, 'src'),
-  entry:  './index.js',
-  output: {
-    path: path.resolve(__dirname, ''),
-    filename: "index.js"
+  entry:  {
+    'nes-cntlr': './nes-cntlr.js',
+    'nes-cntlr.min': './nes-cntlr.js'
   },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: "[name].js",
+    "library": "NESCntlr",
+    "libraryTarget": "var"
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      include: /\.min\.js$/,
+      minimize: true,
+      mangle: {
+        except: ['NESCntlr']
+      }
+    })
+  ],
   module: {
     rules: [{
       test: /\.js$/,

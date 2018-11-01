@@ -67,7 +67,7 @@ class NESCntlr {
       break;
     default: // 'auto'
       this.showVirtualCntlr = false;
-      if ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch) {
+      if (this.isTouchDevice) {
         this.showVirtualCntlr = true;
       }
 
@@ -79,6 +79,10 @@ class NESCntlr {
     };
   }
 
+  get isTouchDevice() {
+    return 'ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch;
+  }
+
   bindEvents() {
     window.addEventListener('orientationchange', e => this.refresh(e) );
     window.addEventListener('resize', e => debounce(300, e => this.refresh(e)) );
@@ -88,9 +92,18 @@ class NESCntlr {
 
   keyAction(e, status) {
     e = e || window.event;
-    this.keysMap[e.keyCode] = status;
 
-    console.log(e.keyCode, status)
+    console.log(e.keyCode, status);
+    // if(!status) {
+    //   console.log(e.keyCode, this.current.dpad.active);
+    //   this.triggerEvent(this.dom.dpad, '', status);
+    // }
+
+    this.keysMap[e.keyCode] = status;
+    if(!status) {
+      console.log(this.current.direction);
+    }
+
 
     switch (e.keyCode) {
       case this.settings.keys.start:
@@ -100,33 +113,41 @@ class NESCntlr {
         this.triggerEvent(this.dom.btns, 'select', status);
         break;
       case this.settings.keys.b:
-        this.setTouchBtns('b', status);
-        //this.triggerEvent(this.dom.btns, 'b', status);
+        this.triggerEvent(this.dom.btns, 'b', status);
         break;
       case this.settings.keys.a:
-        this.setTouchBtns('a', status);
-        //this.triggerEvent(this.dom.btns, 'a', status);
+        this.triggerEvent(this.dom.btns, 'a', status);
         break;
     };
 
     if (this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.left]) {
-      this.triggerEvent(this.dom.dpad, 'up-left', status);
+      if(status) this.current.direction = 'up-left';
+      this.setTouchDirection('up-left', status);
     } else if(this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.right]) {
-      this.triggerEvent(this.dom.dpad, 'up-right', status);
+      if(status) this.current.direction = 'up-right';
+      this.setTouchDirection('up-right', status);
     } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.left]) {
-      this.triggerEvent(this.dom.dpad, 'down-left', status);
+      if(status) this.current.direction = 'down-left';
+      this.setTouchDirection('down-left', status);
     } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.right]) {
-      this.triggerEvent(this.dom.dpad, 'down-right', status);
+      if(status) this.current.direction = 'down-right';
+      this.setTouchDirection('down-right', status);
     } else if(this.keysMap[this.settings.keys.up]) {
-      this.triggerEvent(this.dom.dpad, 'up', status);
+      if(status) this.current.direction = 'up';
+      this.setTouchDirection('up', status);
     } else if(this.keysMap[this.settings.keys.down]) {
-      this.triggerEvent(this.dom.dpad, 'down', status);
+      if(status) this.current.direction = 'down';
+      this.setTouchDirection('down', status);
     } else if(this.keysMap[this.settings.keys.right]) {
-      this.triggerEvent(this.dom.dpad, 'right', status);
+      if(status) this.current.direction = 'right';
+      this.setTouchDirection('right', status);
     } else if(this.keysMap[this.settings.keys.left]) {
-      this.triggerEvent(this.dom.dpad, 'left', status);
+      if(status) this.current.direction = 'left';
+      this.setTouchDirection('left', status);
     } else {
-      this.triggerEvent(this.dom.dpad, '', status);
+      if(status) this.current.direction = '';
+      //this.triggerEvent(this.dom.dpad, this.current.direction, status);
+      this.setTouchDirection(this.current.direction, status);
     }
   }
 
@@ -281,6 +302,7 @@ class NESCntlr {
 	}
 
 	triggerEvent(el, btn, status) {
+    //console.log(btn, status);
 		if(btn !== null) {
 			let params = {
         pressed: status,

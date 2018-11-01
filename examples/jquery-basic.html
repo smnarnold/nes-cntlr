@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Basic Example | NESCntlr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <form name="demo">
+    <table>
+      <tr>
+        <th>D-pad</th>
+        <th></th>
+        <th>Btns</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Up</td>
+        <td><input type="radio" name="dpad" value="up"></td>
+        <td>B</td>
+        <td><input type="radio" name="btns" value="b"></td>
+      </tr>
+      <tr>
+        <td>Right</td>
+        <td><input type="radio" name="dpad" value="right"></td>
+        <td>A</td>
+        <td><input type="radio" name="btns" value="a"></td>
+      </tr>
+      <tr>
+        <td>Down</td>
+        <td><input type="radio" name="dpad" value="down"></td>
+        <td>Select</td>
+        <td><input type="radio" name="btns" value="select"></td>
+      </tr>
+      <tr>
+        <td>Left</td>
+        <td><input type="radio" name="dpad" value="left"></td>
+        <td>Start</td>
+        <td><input type="radio" name="btns" value="start"></td>
+      </tr>
+    </table>
+  </form>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script>
+   window.jQuery || document.write('<script src="./lib/jquery-3.3.1.min.js"><\/script>');
+</script>
+<script src="../dist/nes-cntlr.js"></script>
+<script>
+	var player1 = new NESCntlr();
+  player1.init();
+
+  $(function() {
+    $('body')
+      .on('player1:up player1:right player1:down player1:left', e => setDirection(e.detail));
+
+    function setDirection(detail) {
+      //console.log(detail);
+      document.demo.dpad.value = detail.btn;
+    }
+  });
+
+
+  /*document.body.addEventListener('player1:up', e => { console.log(e.detail.pressed); if(e.detail.pressed) document.demo.dpad.value = 'up' });
+  document.body.addEventListener('player1:right', e => { if(e.detail.pressed) document.demo.dpad.value = 'right' });
+  document.body.addEventListener('player1:down', e => { if(e.detail.pressed) document.demo.dpad.value = 'down' });
+  document.body.addEventListener('player1:left', e => { if(e.detail.pressed) document.demo.dpad.value = 'left' });
+
+  document.body.addEventListener('player1:b', e => { if(e.detail.pressed) document.demo.btns.value = 'b' });
+  document.body.addEventListener('player1:a', e => { if(e.detail.pressed) document.demo.btns.value = 'a' });
+  document.body.addEventListener('player1:select', e => { if(e.detail.pressed) document.demo.btns.value = 'select' });
+  document.body.addEventListener('player1:start', e => { if(e.detail.pressed) document.demo.btns.value = 'start' });*/
+</script>
+</html>

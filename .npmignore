@@ -1,3 +1,23 @@
-/node_modules/
-/.idea/
+# Cache files for Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# Workspace files are user-specific
+*.sublime-workspace
+
+# proportion of contributors will probably not be using Sublime Text
+*.sublime-project
+
+# files
 .babelrc
+
+# folders
+/dist
+/examples
+/tmp
+/out-tsc
+/.idea
+
+# dependencies
+/node_modules
