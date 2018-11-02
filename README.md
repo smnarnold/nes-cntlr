@@ -6,7 +6,7 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 
 ![alt text](https://i.imgur.com/fR0uKUQ.png "NES Controller")
 
-`npm install nes-cntlr`
+`npm i nes-cntlr`
 
 ### Usage
 
