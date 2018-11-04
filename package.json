@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/smnarnold/nes-cntlr#readme",
   "dependencies": {
-    "object-assign": "^4.1.1",
     "throttle-debounce": "^1.0.1"
   },
   "devDependencies": {

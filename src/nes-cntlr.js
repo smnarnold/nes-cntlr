@@ -1,7 +1,6 @@
 'use strict';
 
 const debounce = require('throttle-debounce/debounce');
-const objectAssign = require('object-assign');
 const virtualCntlr = require('./lib/VirtualCntlr');
 
 class NESCntlr {
@@ -16,8 +15,8 @@ class NESCntlr {
         up: 38,
         right: 39,
         down: 40,
-        b: 65,
-        a: 83
+        b: 90,
+        a: 88
       },
       location: 'body',
       prefix: 'player1',
@@ -29,7 +28,10 @@ class NESCntlr {
       }
     };
 
-    this.settings = objectAssign(this.settings, settings);
+    
+    this.settings = Object.assign(this.settings, settings);
+
+    console.log(this.settings);
 
     this.current = {
       dpad: {
@@ -44,7 +46,9 @@ class NESCntlr {
       }
     };
 
-    this.keysMap = {};
+    this.keys = {
+      pressed: {}
+    };
     this.timming = {};
 
     this.showVirtualCntlr = false;
@@ -84,70 +88,53 @@ class NESCntlr {
   }
 
   bindEvents() {
-    window.addEventListener('orientationchange', e => this.refresh(e) );
-    window.addEventListener('resize', e => debounce(300, e => this.refresh(e)) );
-    document.addEventListener('keydown', e => this.keyAction(e, true) );
-    document.addEventListener('keyup', e => this.keyAction(e, false) );
+    window.addEventListener('orientationchange', e => this.refresh(e));
+    window.addEventListener('resize', e => debounce(300, e => this.refresh(e)));
+		window.addEventListener('keydown', e => this.keyAction(e, true));
+		window.addEventListener('keyup', e => this.keyAction(e, false));
   }
 
   keyAction(e, status) {
     e = e || window.event;
 
-    console.log(e.keyCode, status);
-    // if(!status) {
-    //   console.log(e.keyCode, this.current.dpad.active);
-    //   this.triggerEvent(this.dom.dpad, '', status);
-    // }
-
-    this.keysMap[e.keyCode] = status;
-    if(!status) {
-      console.log(this.current.direction);
-    }
-
+		if(status)
+			this.keys.pressed[e.keyCode] = true;
+		else
+      delete this.keys.pressed[e.keyCode];
 
     switch (e.keyCode) {
       case this.settings.keys.start:
-        this.triggerEvent(this.dom.btns, 'start', status);
+        this.setTouchBtns('start', status);
         break;
       case this.settings.keys.select:
-        this.triggerEvent(this.dom.btns, 'select', status);
+        this.setTouchBtns('select', status);
         break;
       case this.settings.keys.b:
-        this.triggerEvent(this.dom.btns, 'b', status);
+        this.setTouchBtns('b', status);
         break;
       case this.settings.keys.a:
-        this.triggerEvent(this.dom.btns, 'a', status);
+        this.setTouchBtns('a', status);
         break;
     };
 
-    if (this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.left]) {
-      if(status) this.current.direction = 'up-left';
+		if (this.keys.pressed.hasOwnProperty(this.settings.keys.up) && this.keys.pressed.hasOwnProperty(this.settings.keys.left)) {
       this.setTouchDirection('up-left', status);
-    } else if(this.keysMap[this.settings.keys.up] && this.keysMap[this.settings.keys.right]) {
-      if(status) this.current.direction = 'up-right';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.up) && this.keys.pressed.hasOwnProperty(this.settings.keys.right)) {
       this.setTouchDirection('up-right', status);
-    } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.left]) {
-      if(status) this.current.direction = 'down-left';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.down) && this.keys.pressed.hasOwnProperty(this.settings.keys.left)) {
       this.setTouchDirection('down-left', status);
-    } else if(this.keysMap[this.settings.keys.down] && this.keysMap[this.settings.keys.right]) {
-      if(status) this.current.direction = 'down-right';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.down) && this.keys.pressed.hasOwnProperty(this.settings.keys.right)) {
       this.setTouchDirection('down-right', status);
-    } else if(this.keysMap[this.settings.keys.up]) {
-      if(status) this.current.direction = 'up';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.up)) {
       this.setTouchDirection('up', status);
-    } else if(this.keysMap[this.settings.keys.down]) {
-      if(status) this.current.direction = 'down';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.down)) {
       this.setTouchDirection('down', status);
-    } else if(this.keysMap[this.settings.keys.right]) {
-      if(status) this.current.direction = 'right';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.right)) {
       this.setTouchDirection('right', status);
-    } else if(this.keysMap[this.settings.keys.left]) {
-      if(status) this.current.direction = 'left';
+		} else if (this.keys.pressed.hasOwnProperty(this.settings.keys.left)) {
       this.setTouchDirection('left', status);
     } else {
-      if(status) this.current.direction = '';
-      //this.triggerEvent(this.dom.dpad, this.current.direction, status);
-      this.setTouchDirection(this.current.direction, status);
+      this.setTouchDirection();
     }
   }
 
@@ -256,10 +243,8 @@ class NESCntlr {
 				this.triggerEvent(this.dom.dpad, this.current.dpad.active, true);
 			}
 		} else { // Key up
-			if(this.current.dpad.active !== direction) { // Flag avoid repetition
-				this.triggerEvent(this.dom.dpad, this.current.dpad.active, false);
-				this.current.dpad.active = direction;
-			}
+        this.triggerEvent(this.dom.dpad, this.current.dpad.active, false);
+        this.current.dpad.active = null;
 		}
 	}
 
@@ -294,16 +279,13 @@ class NESCntlr {
 				this.triggerEvent(this.dom.btns, this.current.btns.active, true);
 			}
 		} else { // Key up
-			if(this.current.btns.active !== btn) { // Flag avoid repetition
-				this.triggerEvent(this.dom.btns, this.current.btns.active, false);
-				this.current.btns.active = btn;
-			}
+      this.triggerEvent(this.dom.btns, this.current.btns.active, false);
+      this.current.btns.active = null;
 		}
 	}
 
 	triggerEvent(el, btn, status) {
-    //console.log(btn, status);
-		if(btn !== null) {
+		if(btn !== null && btn !== '') {
 			let params = {
         pressed: status,
         btn: btn
@@ -315,8 +297,8 @@ class NESCntlr {
 				params.duration = new Date() - this.timming[btn];
 			}
 
-			let event = window.CustomEvent ? new CustomEvent(`${this.settings.prefix}:${btn}`, {detail: params}) : document.createEvent('CustomEvent').initCustomEvent(`${this.settings.prefix}:${btn}`, true, true, params);
-			document.body.dispatchEvent(event);
+			let event = new CustomEvent(`${this.settings.prefix}:${btn}`, {detail: params});
+			document.dispatchEvent(event);
 		}
 
 		if(this.showVirtualCntlr && el) {

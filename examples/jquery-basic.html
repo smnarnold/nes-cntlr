@@ -5,37 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+  <h1>jQuery</h1>
   <form name="demo">
     <table>
       <tr>
-        <th>D-pad</th>
-        <th></th>
+        <th colspan="3">D-pad</th>
         <th>Btns</th>
-        <th></th>
       </tr>
       <tr>
-        <td>Up</td>
-        <td><input type="radio" name="dpad" value="up"></td>
-        <td>B</td>
-        <td><input type="radio" name="btns" value="b"></td>
-      </tr>
-      <tr>
-        <td>Right</td>
-        <td><input type="radio" name="dpad" value="right"></td>
-        <td>A</td>
-        <td><input type="radio" name="btns" value="a"></td>
-      </tr>
-      <tr>
-        <td>Down</td>
-        <td><input type="radio" name="dpad" value="down"></td>
-        <td>Select</td>
-        <td><input type="radio" name="btns" value="select"></td>
-      </tr>
-      <tr>
-        <td>Left</td>
-        <td><input type="radio" name="dpad" value="left"></td>
-        <td>Start</td>
-        <td><input type="radio" name="btns" value="start"></td>
+        <td>
+          <input type="checkbox" name="up-left">↖<br>
+          <input type="checkbox" name="left">←<br>
+          <input type="checkbox" name="down-left">↙
+        </td>
+        <td align="center">
+          ↑<br>
+          <input type="checkbox" name="up"><br>
+          <input type="checkbox" name="down"><br>
+          ↓
+        </td>
+        <td>
+          ↗<input type="checkbox" name="up-right"><br>
+          →<input type="checkbox" name="right"><br>
+          ↘<input type="checkbox" name="down-right">
+        </td>
+        <td>
+          <input type="checkbox" name="b">B<br>
+          <input type="checkbox" name="a">A<br>
+          <input type="checkbox" name="select">Select<br>
+          <input type="checkbox" name="start">Start
+        </td>
       </tr>
     </table>
   </form>
@@ -53,24 +52,7 @@
   player1.init();
 
   $(function() {
-    $('body')
-      .on('player1:up player1:right player1:down player1:left', e => setDirection(e.detail));
-
-    function setDirection(detail) {
-      //console.log(detail);
-      document.demo.dpad.value = detail.btn;
-    }
+    $(document).on('player1:up-left player1:up player1:up-right player1:right player1:left player1:down-left player1:down player1:down-right player1:b player1:a player1:select player1:start', e => document.demo[e.detail.btn].checked = e.detail.pressed);
   });
-
-
-  /*document.body.addEventListener('player1:up', e => { console.log(e.detail.pressed); if(e.detail.pressed) document.demo.dpad.value = 'up' });
-  document.body.addEventListener('player1:right', e => { if(e.detail.pressed) document.demo.dpad.value = 'right' });
-  document.body.addEventListener('player1:down', e => { if(e.detail.pressed) document.demo.dpad.value = 'down' });
-  document.body.addEventListener('player1:left', e => { if(e.detail.pressed) document.demo.dpad.value = 'left' });
-
-  document.body.addEventListener('player1:b', e => { if(e.detail.pressed) document.demo.btns.value = 'b' });
-  document.body.addEventListener('player1:a', e => { if(e.detail.pressed) document.demo.btns.value = 'a' });
-  document.body.addEventListener('player1:select', e => { if(e.detail.pressed) document.demo.btns.value = 'select' });
-  document.body.addEventListener('player1:start', e => { if(e.detail.pressed) document.demo.btns.value = 'start' });*/
 </script>
 </html>

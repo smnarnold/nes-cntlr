@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Multiplayers | NESCntlr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Multiplayers</h1>
+  <form name="demo">
+    <h2>Player 1</h2>
+    <table>
+      <tr>
+        <th colspan="3">D-pad</th>
+        <th>Btns</th>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox" name="player1-up-left">↖<br>
+          <input type="checkbox" name="player1-left">←<br>
+          <input type="checkbox" name="player1-down-left">↙
+        </td>
+        <td align="center">
+          ↑<br>
+          <input type="checkbox" name="player1-up"><br>
+          <input type="checkbox" name="player1-down"><br>
+          ↓
+        </td>
+        <td>
+          ↗<input type="checkbox" name="player1-up-right"><br>
+          →<input type="checkbox" name="player1-right"><br>
+          ↘<input type="checkbox" name="player1-down-right">
+        </td>
+        <td>
+          <input type="checkbox" name="player1-b">B<br>
+          <input type="checkbox" name="player1-a">A<br>
+          <input type="checkbox" name="player1-select">Select<br>
+          <input type="checkbox" name="player1-start">Start
+        </td>
+      </tr>
+    </table>
+
+    <h2>Player 2</h2>
+    <table>
+      <tr>
+        <th colspan="3">D-pad</th>
+        <th>Btns</th>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox" name="player2-up-left">↖<br>
+          <input type="checkbox" name="player2-left">←<br>
+          <input type="checkbox" name="player2-down-left">↙
+        </td>
+        <td align="center">
+          ↑<br>
+          <input type="checkbox" name="player2-up"><br>
+          <input type="checkbox" name="player2-down"><br>
+          ↓
+        </td>
+        <td>
+          ↗<input type="checkbox" name="player2-up-right"><br>
+          →<input type="checkbox" name="player2-right"><br>
+          ↘<input type="checkbox" name="player2-down-right">
+        </td>
+        <td>
+          <input type="checkbox" name="player2-b">B<br>
+          <input type="checkbox" name="player2-a">A<br>
+          <input type="checkbox" name="player2-select">Select<br>
+          <input type="checkbox" name="player2-start">Start
+        </td>
+      </tr>
+    </table>
+  </form>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script>
+   window.jQuery || document.write('<script src="./lib/jquery-3.3.1.min.js"><\/script>');
+</script>
+<script src="../dist/nes-cntlr.js"></script>
+<script>
+  let player1 = new NESCntlr();
+  let player2 = new NESCntlr({
+    prefix: 'player2',
+    keys: {start: 13, select: 32, left: 65, up: 87, right: 68, down: 83, b: 222, a: 220}
+  });
+  player1.init();
+  player2.init();
+
+  $(function() {
+    $(document).on('player1:up-left player1:up player1:up-right player1:right player1:left player1:down-left player1:down player1:down-right player1:b player1:a player1:select player1:start', e => document.demo[`player1-${e.detail.btn}`].checked = e.detail.pressed);
+    $(document).on('player2:up-left player2:up player2:up-right player2:right player2:left player2:down-left player2:down player2:down-right player2:b player2:a player2:select player2:start', e => document.demo[`player2-${e.detail.btn}`].checked = e.detail.pressed);
+  });
+</script>
+</html>
