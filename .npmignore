@@ -13,7 +13,6 @@
 .babelrc
 
 # folders
-/dist
 /examples
 /tmp
 /out-tsc
