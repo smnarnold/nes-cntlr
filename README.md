@@ -9,7 +9,10 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 `npm i nes-cntlr`
 
 ### Demo
-[Basic - Vanilla Javascript](https://codepen.io/sarnold/pen/BGzrrV?editors=0010#0)
+[Basic - Vanilla Javascript](https://codepen.io/sarnold/pen/BGzrrV)
+[Basic - jQuery](https://codepen.io/sarnold/pen/RqRMvx)
+[Multiplayers](https://codepen.io/sarnold/pen/MzeVdW?)
+[Collection](https://codepen.io/collection/nvmVVg/)
 
 ### Usage
 

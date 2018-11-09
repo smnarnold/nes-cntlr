@@ -1,6 +1,6 @@
 {
   "name": "nes-cntlr",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Javascript NES controller emulator for keyboards and touch devices",
   "main": "dist/nes-cntlr.js",
   "scripts": {
