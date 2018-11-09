@@ -8,6 +8,9 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 
 `npm i nes-cntlr`
 
+### Demo
+[Basic - Vanilla Javascript](https://codepen.io/sarnold/pen/BGzrrV?editors=0010#0)
+
 ### Usage
 
 ```
@@ -46,9 +49,10 @@ prefix | string | 'nescntlr' | Class prefix
 virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
 
+
 #### Browser support
 
-nes-cntlr works on IE11+ in addition to other modern browsers such as Chrome, Firefox, and Safari.
+nes-cntlr works on all modern browsers such as Chrome, Firefox, Edge and Safari.
 
 #### Dependencies
 
