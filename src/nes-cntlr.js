@@ -1,9 +1,9 @@
 'use strict';
 
-const debounce = require('throttle-debounce/debounce');
+import { debounce } from 'throttle-debounce';
 const virtualCntlr = require('./lib/VirtualCntlr');
 
-class NESCntlr {
+export default class NESCntlr {
   constructor(settings) {
     this.dom = {};
 
@@ -309,16 +309,4 @@ class NESCntlr {
       }
 		}
 	}
-}
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = NESCntlr;
-} else {
-  if (typeof define === 'function' && define.amd) {
-    define([], () => {
-      return NESCntlr;
-    });
-  } else {
-    window.NESCntlr = NESCntlr;
-  }
 }

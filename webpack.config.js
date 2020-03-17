@@ -1,42 +1,50 @@
-// webpack.config.js
-const webpack = require('webpack')
-const path = require('path')
+/**
+ * webpack.config.js
+ * ===============
+ */
 
-const config = {
-  context: path.resolve(__dirname, 'src'),
-  entry:  {
-    'nes-cntlr': './nes-cntlr.js',
-    'nes-cntlr.min': './nes-cntlr.js'
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+module.exports = {
+  devtool: 'inline-source-map',
+  mode: 'production',
+  module: {
+    rules: [
+      {
+        exclude: /node_modules/,
+        loader: 'babel-loader', // config file can be found at .babelrc.js
+        options: {
+          presets: ["@babel/preset-env"]
+        },
+        test: /\.js$/,
+      },
+    ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        include: /\.min\.js$/,
+        uglifyOptions: {
+          mangle: false,
+          output: {
+            comments: false,
+          },
+          compress: {
+            drop_console: true,
+          },
+        },
+      }),
+    ],
+  },
+  entry: {
+    'nes-cntlr': './src/nes-cntlr.js',
+    'nes-cntlr.min': './src/nes-cntlr.js',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    library: 'NESCntlr',
+    libraryTarget: 'umd',
+    libraryExport: "default",
     filename: "[name].js",
-    "library": "NESCntlr",
-    "libraryTarget": "var"
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      include: /\.min\.js$/,
-      minimize: true,
-      mangle: {
-        except: ['NESCntlr']
-      }
-    })
-  ],
-  module: {
-    rules: [{
-      test: /\.js$/,
-      include: path.resolve(__dirname),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            ['es2015', { modules: false }]
-          ]
-        }
-      }]
-    }]
-  }
-}
-
-module.exports = config
+};

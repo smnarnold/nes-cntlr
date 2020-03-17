@@ -1,6 +1,6 @@
 {
   "name": "nes-cntlr",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Javascript NES controller emulator for keyboards and touch devices",
   "main": "dist/nes-cntlr.js",
   "scripts": {
@@ -25,12 +25,14 @@
   },
   "homepage": "https://github.com/smnarnold/nes-cntlr#readme",
   "dependencies": {
-    "throttle-debounce": "^1.0.1"
+    "throttle-debounce": "^2.1.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "webpack": "^3.11.0"
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.10"
   }
 }
