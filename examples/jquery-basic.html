@@ -3,10 +3,75 @@
 <head>
 	<title>Basic Example | NESCntlr</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-size: 16px;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    h1,
+    h2 {
+      font: normal;
+      margin: 20px;
+    }
+
+    table {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 20px;
+      border-collapse: collapse;
+    }
+
+    .legend {
+      border: solid 1px #d4d3d4;
+    }
+
+    .legend tr {
+      border-top: solid 1px #d4d3d4;
+    }
+
+    .legend tr:nth-child(odd) {
+      background: #f1f1f1;
+    }
+
+    .legend td,
+    .legend th {
+      font-weight: normal;
+      padding: 2px 5px;
+      text-align: left;
+    }
+
+    .legend td {
+      font-size: .85rem;
+    }
+
+    .legend th,
+    .legend td:empty {
+      border-left: solid 1px #d4d3d4;
+    }
+
+    kbd {
+      background-color: #eee;
+      border-radius: 3px;
+      border: 1px solid #b4b4b4;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+      color: #333;
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1;
+      padding: 2px 4px;
+      min-width: 16px;
+      text-align: center;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+  </style>
 </head>
 <body>
-  <h1>jQuery</h1>
+  <h1>jQuery Basic</h1>
   <form name="demo">
+    <h2>Player 1</h2>
     <table>
       <tr>
         <th colspan="3">D-pad</th>
@@ -35,6 +100,44 @@
           <input type="checkbox" name="select">Select<br>
           <input type="checkbox" name="start">Start
         </td>
+      </tr>
+    </table>
+
+    <table class="legend">
+      <tr>
+        <th>↖</th>
+        <td><kbd>↑</kbd> + <kbd>←</kbd></td>
+        <th>↑</th>
+        <td><kbd>↑</kbd></td>
+        <th>↗</th>
+        <td><kbd>↑</kbd> + <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <th>←</th>
+        <td><kbd>←</kbd></td>
+        <td colspan="2"></td>
+        <th>→</th>
+        <td><kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <th>↙</th>
+        <td><kbd>↓</kbd> + <kbd>←</kbd></td>
+        <th>↓</th>
+        <td><kbd>↓</kbd></td>
+        <th>↘</th>
+        <td><kbd>↓</kbd> + <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <th>B</th>
+        <td><kbd>z</kbd></td>
+        <th colspan="2">Select</th>
+        <td colspan="2"><kbd>—</kbd></td>
+      </tr>
+      <tr>
+        <th>A</th>
+        <td><kbd>x</kbd></td>
+        <th colspan="2">Start</th>
+        <td colspan="2"><kbd>↵</kbd></td>
       </tr>
     </table>
   </form>
