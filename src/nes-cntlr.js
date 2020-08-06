@@ -28,10 +28,7 @@ class NESCntlr {
       }
     };
 
-    
     this.settings = Object.assign(this.settings, settings);
-
-    console.log(this.settings);
 
     this.current = {
       dpad: {
