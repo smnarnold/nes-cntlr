@@ -30,7 +30,8 @@ class VirtualCntlr {
 				padding: 0 15px 10px 15px;
 				box-sizing: border-box;
 				justify-content: space-between;
-				perspective: 1000px;
+				perspective-origin: 50px 53px;
+				perspective: 100px;
 				z-index: ${this.settings.styles.zIndex};
 			}
 			.${this.settings.prefix}-cntlr .d-pad { transition: transform 0.2s; }

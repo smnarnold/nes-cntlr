@@ -66,42 +66,111 @@
       white-space: nowrap;
       text-transform: uppercase;
     }
+
+    .controler {
+      display: inline-grid;
+      grid-template-areas: 
+        "c11 c12 c13 c14 c15 c16 c17 c18 c19"
+        "c21 c22 c23 c24 c25 c26 c27 c28 c29"
+        "c31 c32 c33 c34 c35 c36 c37 c38 c39"
+        "c41 c42 c43 c44 c45 c46 c47 c48 c49"
+        "c51 c52 c53 c54 c55 c56 c57 c58 c59";
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      text-align: center;
+      font-size: 16px;
+      margin: 20px;
+      vertical-align: middle;
+    }
+
+    input { 
+      display: block;
+      margin: 0 auto;
+    }
+
+    .arrow-top-left { grid-area: c11; }
+    .arrow-top { grid-area: c13; }
+    .arrow-top-right { grid-area: c15; }
+
+    .arrow-left { grid-area: c31; }
+    .arrow-right { grid-area: c35; }
+
+    .arrow-btm-left { grid-area: c51; }
+    .arrow-btm { grid-area: c53; }
+    .arrow-btm-right { grid-area: c55; }
+
+    .select { 
+      grid-area: c36; 
+      padding: 0 1em;
+    }
+    .start { grid-area: c37; }
+
+    .b { 
+      grid-area: c38;
+      padding: 0 1em; 
+    }
+    .a { 
+      grid-area: c39; 
+      padding: 0 1em;
+    }
+
+    [name='up-left'] { grid-area: c22; }
+    [name='up'] { grid-area: c23; }
+    [name='up-right'] { grid-area: c24; }
+
+    [name='left'] { grid-area: c32; }
+    [name='right'] { grid-area: c34; }
+
+    [name='down-left'] { grid-area: c42; }
+    [name='down'] { grid-area: c43; }
+    [name='down-right'] { grid-area: c44; }
+
+    [name='select'] { grid-area: c46; }
+    [name='start'] { grid-area: c47; }
+
+    [name='b'] { grid-area: c48; }
+    [name='a'] { grid-area: c49; }
   </style>
 </head>
 <body>
   <h1>Vanilla Javascript Basic</h1>
   <form name="demo">
     <h2>Player 1</h2>
-    <table>
-      <tr>
-        <th colspan="3">D-pad</th>
-        <th>Btns</th>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox" name="up-left">↖<br>
-          <input type="checkbox" name="left">←<br>
-          <input type="checkbox" name="down-left">↙
-        </td>
-        <td align="center">
-          ↑<br>
-          <input type="checkbox" name="up"><br>
-          <input type="checkbox" name="down"><br>
-          ↓
-        </td>
-        <td>
-          ↗<input type="checkbox" name="up-right"><br>
-          →<input type="checkbox" name="right"><br>
-          ↘<input type="checkbox" name="down-right">
-        </td>
-        <td>
-          <input type="checkbox" name="b">B<br>
-          <input type="checkbox" name="a">A<br>
-          <input type="checkbox" name="select">Select<br>
-          <input type="checkbox" name="start">Start
-        </td>
-      </tr>
-    </table>
+
+    <div class="controler">
+      <div class="arrow-top-left">↖</div>
+      <div class="arrow-top">↑</div>
+      <div class="arrow-top-right">↗</div>
+
+      <div class="arrow-left">←</div>
+      <div class="arrow-right">→</div>
+
+      <div class="arrow-btm-left">↙</div>
+      <div class="arrow-btm">↓</div>
+      <div class="arrow-btm-right">↘</div>
+
+      <input type="checkbox" name="up-left">
+      <input type="checkbox" name="up">
+      <input type="checkbox" name="up-right">
+      
+      <input type="checkbox" name="left">
+      <input type="checkbox" name="right">
+
+      <input type="checkbox" name="down-left">
+      <input type="checkbox" name="down">
+      <input type="checkbox" name="down-right">
+
+      <div class="select">Select</div>
+      <div class="start">Start</div>
+      <input type="checkbox" name="select">
+      <input type="checkbox" name="start">
+
+      <div class="b">B</div>
+      <div class="a">A</div>
+      <input type="checkbox" name="b">
+      <input type="checkbox" name="a">
+    </div>
 
     <table class="legend">
       <tr>
@@ -141,15 +210,15 @@
       </tr>
     </table>
   </form>
+
+  <script src="../dist/nes-cntlr.js"></script>
+  <script>
+    let player1 = new NESCntlr();
+
+    let eventsArr = ['up-left', 'up', 'up-right', 'right', 'left', 'down-left', 'down', 'down-right', 'b', 'a', 'select', 'start'];
+    eventsArr.forEach(event => {
+      document.addEventListener(`player1:${event}`, e => document.demo[e.detail.btn].checked = e.detail.pressed);
+    });
+  </script>
 </body>
-<script src="../dist/nes-cntlr.js"></script>
-<script>
-  let player1 = new NESCntlr();
-  let events = ['up-left', 'up', 'up-right', 'right', 'left', 'down-left', 'down', 'down-right', 'b', 'a', 'select', 'start'];
-  player1.init();
-  for(x=0; x<events.length; x++) {
-    let event = 'player1:' + events[x];
-    document.addEventListener(event, e => document.demo[e.detail.btn].checked = e.detail.pressed);
-  }
-</script>
 </html>

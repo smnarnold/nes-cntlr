@@ -46,7 +46,7 @@ cntlr:a | pressed, duration | A button
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
 colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Black, Light black, Red, Light red, Grey
-keys | object | {start: 13, select: 32, left: 37, up: 38, right: 39, down: 40, b: 90, a: 88} | keys mapping.
+keys | object | {start: 'Enter', select: 'Space', left: 'ArrowLeft', up: 'ArrowUp', right: 'ArrowRight', down: 'ArrowDown', b: 'KeyZ', a: 'KeyX'} | keys mapping.
 location | string | 'body' | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
 prefix | string | 'nescntlr' | Class prefix
 virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.

@@ -1,38 +1,35 @@
 {
   "name": "nes-cntlr",
-  "version": "3.0.3",
+  "version": "2.0.0",
   "description": "Javascript NES controller emulator for keyboards and touch devices",
-  "main": "dist/nes-cntlr.js",
+  "author": ", <moi@smnarnold.com> (https://smnarnold.com)",
+  "browser": "dist/nes-cntlr.js",
+  "unpkg": "dist/nes-cntlr.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --watch",
-    "build": "webpack -p"
+    "start": "webpack",
+    "dev": "webpack"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/smnarnold/nes-cntlr.git"
-  },
+  "files": ["dist"],
   "keywords": [
     "Nintendo",
     "NES",
     "Controller",
     "Retro"
   ],
-  "author": "Simon Arnold",
+  "dependencies": {
+    "throttle-debounce": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smnarnold/nes-cntlr.git"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/smnarnold/nes-cntlr/issues"
   },
   "homepage": "https://github.com/smnarnold/nes-cntlr#readme",
-  "dependencies": {
-    "throttle-debounce": "^2.1.0"
-  },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.4.3",
-    "babel-loader": "^8.0.5",
-    "uglifyjs-webpack-plugin": "^2.1.2",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.10"
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
   }
 }
