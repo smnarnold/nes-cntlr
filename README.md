@@ -4,7 +4,7 @@ _Javascript NES controller emulator for keyboards and touch devices_
 
 Allow you to use your keyboard and/or a virtual NES Controller _(for touch devices)_ to control whatever you create, like you would with a NES emulator.
 
-![alt text](https://i.imgur.com/fR0uKUQ.png "NES Controller")
+![alt text](https://i.imgur.com/WhsJLAk.png "NES Controller")
 
 `npm i nes-cntlr`
 
@@ -28,28 +28,30 @@ All events return a _'pressed'_ parameter [bool: true|false]. On release, a _'du
 
 Event | Params | Description
 ----- | ------ | -----------
-cntlr:up | pressed, duration | D-pad <kbd>↑</kbd>
-cntlr:up-right | pressed, duration | D-pad <kbd>↗</kbd>
-cntlr:right | pressed, duration | D-pad <kbd>→</kbd>
-cntlr:down-right | pressed, duration | D-pad <kbd>↘</kbd>
-cntlr:down | pressed, duration | D-pad <kbd>↓</kbd>
-cntlr:down-left | pressed, duration | D-pad <kbd>↙</kbd>
-cntlr:left | pressed, duration | D-pad <kbd>←</kbd>
-cntlr:up-left | pressed, duration | D-pad <kbd>↖</kbd>
-cntlr:select | pressed, duration | Select button
-cntlr:start | pressed, duration | Start button
-cntlr:b | pressed, duration | B button
-cntlr:a | pressed, duration | A button
+player1:up | pressed, duration | D-pad <kbd>↑</kbd>
+player1:up-right | pressed, duration | D-pad <kbd>↗</kbd>
+player1:right | pressed, duration | D-pad <kbd>→</kbd>
+player1:down-right | pressed, duration | D-pad <kbd>↘</kbd>
+player1:down | pressed, duration | D-pad <kbd>↓</kbd>
+player1:down-left | pressed, duration | D-pad <kbd>↙</kbd>
+player1:left | pressed, duration | D-pad <kbd>←</kbd>
+player1:up-left | pressed, duration | D-pad <kbd>↖</kbd>
+player1:select | pressed, duration | Select button
+player1:start | pressed, duration | Start button
+player1:b | pressed, duration | B button
+player1:a | pressed, duration | A button
+
+The _'player1'_ at the beginning of every event match the prefix setting. That way, you can bind multiple nes-cntlr and differentiate which one sent you an event. 
 
 ### Settings
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
 colors | array | ['#2F3335', '#383d41', '#AC3C66', '#D64A80', '#B4B4B4'] | Black, Light black, Red, Light red, Grey
-keys | object | {start: 'Enter', select: 'Space', left: 'ArrowLeft', up: 'ArrowUp', right: 'ArrowRight', down: 'ArrowDown', b: 'KeyZ', a: 'KeyX'} | keys mapping.
+keys | object | {<br />start: 'Enter',<br /> select: 'Space', <br />left: 'ArrowLeft', <br />up: 'ArrowUp', right: 'ArrowRight', <br />down: 'ArrowDown', <br />b: 'KeyZ', <br />a: 'KeyX'<br />} | keys mapping.
 location | string | 'body' | Allows you to select where the virtual controller should be injected. ex: .myDiv, #myDiv, etc.
-prefix | string | 'nescntlr' | Class prefix
-virtual | string | 'auto' | 'auto', 'never' or 'alway' show virtual controller.
+prefix | string | 'player1' | Class prefix
+virtual | string | 'auto' | 'auto', 'never' or 'always' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
 
 
@@ -59,7 +61,7 @@ nes-cntlr works on all modern browsers such as Chrome, Firefox, Edge and Safari.
 
 #### Dependencies
 
-none
+ - [throttle-debounce](https://www.npmjs.com/package/throttle-debounce)
 
 #### License
 
