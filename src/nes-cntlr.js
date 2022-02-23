@@ -135,18 +135,26 @@ class NESCntlr {
       this.controller = new virtualCntlr(this.settings);
       this.controller.create();
 
+      this.dom.el = document.querySelector(`.${this.settings.prefix}-cntlr`);
       this.dom.dpad = document.querySelector(`.${this.settings.prefix}-cntlr .d-pad`);
       this.dom.btns = document.querySelector(`.${this.settings.prefix}-cntlr .btns`);
 
       this.setVirtualCntlrPos();
 
-      this.dom.dpad.addEventListener('touchstart', e => this.dpadMove(e) );
-      this.dom.dpad.addEventListener('touchmove', e => this.dpadMove(e) );
+      console.log(this.dom.el)
+
+      this.dom.el.addEventListener('touchstart', e => this.touchMove(e) );
+      this.dom.el.addEventListener('touchmove', e => this.touchMove(e) );
+      this.dom.el.addEventListener('touchend', () => this.touchEnd() );
+      this.dom.el.addEventListener('touchcancel', () => this.touchEnd() );
+
+      /*this.dom.dpad.addEventListener('touchstart', e => this.dpadMove(e) );
+      this.dom.dpad.addEventListener('touchmove', e => this.dpadMove(e) );*/
       this.dom.dpad.addEventListener('touchend', () => this.dpadEnd() );
       this.dom.dpad.addEventListener('touchcancel', () => this.dpadEnd() );
 
-      this.dom.btns.addEventListener('touchstart', e => this.btnsMove(e) );
-      this.dom.btns.addEventListener('touchmove', e => this.btnsMove(e) );
+      /*this.dom.btns.addEventListener('touchstart', e => this.btnsMove(e) );
+      this.dom.btns.addEventListener('touchmove', e => this.btnsMove(e) );*/
       this.dom.btns.addEventListener('touchend', () => this.btnsEnd() );
       this.dom.btns.addEventListener('touchcancel', () => this.btnsEnd() );
     }
@@ -179,15 +187,32 @@ class NESCntlr {
     if(this.dom.dpad && this.dom.btns) {
       this.current.dpad.top = this.dom.dpad.getBoundingClientRect().y;
       this.current.dpad.left = this.dom.dpad.getBoundingClientRect().x;
+      this.current.dpad.right = this.dom.dpad.getBoundingClientRect().right;
       this.current.btns.top = this.dom.btns.getBoundingClientRect().y;
       this.current.btns.left = this.dom.btns.getBoundingClientRect().x;
+      this.current.btns.right = this.dom.btns.getBoundingClientRect().right;
     }
   }
 
-  dpadMove(e) {
+  touchMove(e) {
     e.preventDefault();
-    let posX = e.touches[0].pageX - this.current.dpad.left;
-    let posY = e.touches[0].pageY - this.current.dpad.top;
+
+    Array.from(e.touches).forEach(t => {
+      if (t.pageX > this.current.dpad.left && t.pageX < this.current.dpad.right) {
+        this.dpadMove(t);
+      } else if (t.pageX > this.current.btns.left && t.pageX < this.current.btns.right) {
+        this.btnsMove(t);
+      }
+    });
+  }
+
+  touchEnd() {
+    this.setTouchDirection();
+  }
+
+  dpadMove(e) {
+    let posX = e.pageX - this.current.dpad.left;
+    let posY = e.pageY - this.current.dpad.top;
 
     if(posX >= 0 && posX <= 85 && posX && posY >= 0 && posY <= 88) {
 			if(posX < 28) { // Left
@@ -218,7 +243,7 @@ class NESCntlr {
 	}
 
 	dpadEnd() {
-		this.setTouchDirection();
+
 	}
 
 	setTouchDirection(direction = null) {
@@ -235,9 +260,8 @@ class NESCntlr {
 	}
 
 	btnsMove(e) {
-		e.preventDefault();
-		let posX = e.touches[0].pageX - this.current.btns.left;
-		let posY = e.touches[0].pageY - this.current.btns.top;
+		let posX = e.pageX - this.current.btns.left;
+		let posY = e.pageY - this.current.btns.top;
 
 		if(posX >= 0 && posX <= 100 && posY >= 28 && posY <= 107) {
 			let btn = null;

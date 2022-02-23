@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Multiplayers | NESCntlr</title>
+	<title>Basic Example | NESCntlr</title>
   <style>
     body {
       font-size: 16px;
@@ -136,8 +136,8 @@
   </style>
 </head>
 <body>
-  <h1>Multiplayers</h1>
-  <form name="demo1">
+  <h1>Vanilla Javascript Basic</h1>
+  <form name="demo">
     <h2>Player 1</h2>
 
     <div class="controler">
@@ -213,93 +213,15 @@
     </table>
   </form>
 
-  <form name="demo2">
-    <h2>Player 2</h2>
-    <div class="controler">
-      <div class="arrow-top-left">↖</div>
-      <div class="arrow-top">↑</div>
-      <div class="arrow-top-right">↗</div>
-
-      <div class="arrow-left">←</div>
-      <div class="arrow-right">→</div>
-
-      <div class="arrow-btm-left">↙</div>
-      <div class="arrow-btm">↓</div>
-      <div class="arrow-btm-right">↘</div>
-
-      <input type="checkbox" name="up-left">
-      <input type="checkbox" name="up">
-      <input type="checkbox" name="up-right">
-      
-      <input type="checkbox" name="left">
-      <input type="checkbox" name="right">
-
-      <input type="checkbox" name="down-left">
-      <input type="checkbox" name="down">
-      <input type="checkbox" name="down-right">
-
-      <div class="select">Select</div>
-      <div class="start">Start</div>
-      <input type="checkbox" name="select">
-      <input type="checkbox" name="start">
-
-      <div class="a">A</div>
-      <div class="b">B</div>
-      <input type="checkbox" name="b">
-      <input type="checkbox" name="a">
-    </div>
-
-    <table class="legend">
-      <tr>
-        <th>↖</th>
-        <td><kbd>w</kbd> + <kbd>a</kbd></td>
-        <th>↑</th>
-        <td><kbd>w</kbd></td>
-        <th>↗</th>
-        <td><kbd>w</kbd> + <kbd>d</kbd></td>
-      </tr>
-      <tr>
-        <th>←</th>
-        <td><kbd>a</kbd></td>
-        <td colspan="2"></td>
-        <th>→</th>
-        <td><kbd>d</kbd></td>
-      </tr>
-      <tr>
-        <th>↙</th>
-        <td><kbd>s</kbd> + <kbd>a</kbd></td>
-        <th>↓</th>
-        <td><kbd>s</kbd></td>
-        <th>↘</th>
-        <td><kbd>s</kbd> + <kbd>d</kbd></td>
-      </tr>
-      <tr>
-        <th>B</th>
-        <td><kbd>f</kbd></td>
-        <th colspan="2">Select</th>
-        <td colspan="2"><kbd>1</kbd></td>
-      </tr>
-      <tr>
-        <th>A</th>
-        <td><kbd>g</kbd></td>
-        <th colspan="2">Start</th>
-        <td colspan="2"><kbd>2</kbd></td>
-      </tr>
-    </table>
-  </form>
-
   <script src="../dist/nes-cntlr.js"></script>
   <script>
-    let player1 = new NESCntlr();
-    let player2 = new NESCntlr({
-      prefix: 'player2',
-      keys: { select: 'Digit1', start: 'Digit2', left: 'KeyA', up: 'KeyW', right: 'KeyD', down: 'KeyS', b: 'KeyF', a: 'KeyG'}
+    let player1 = new NESCntlr({
+      virtual: 'always'
     });
 
     let eventsArr = ['up-left', 'up', 'up-right', 'right', 'left', 'down-left', 'down', 'down-right', 'b', 'a', 'select', 'start'];
     eventsArr.forEach(event => {
-      document.addEventListener(`player1:${event}`, e => document.demo1[e.detail.btn].checked = e.detail.pressed);
-      document.addEventListener(`player2:${event}`, e => document.demo2[e.detail.btn].checked = e.detail.pressed);
+      document.addEventListener(`player1:${event}`, e => document.demo[e.detail.btn].checked = e.detail.pressed);
     });
   </script>
 </body>
