@@ -1,4 +1,4 @@
-import { debounce } from 'throttle-debounce';
+import debounce from 'lodash/debounce';
 import virtualCntlr from './virtual-cntlr';
 
 class NESCntlr {
@@ -68,12 +68,9 @@ class NESCntlr {
       this.destroyVirtualCntlr();
       break;
     default: // 'auto'
-      this.showVirtualCntlr = false;
-      if (this.isTouchDevice) {
-        this.showVirtualCntlr = true;
-      }
+      this.showVirtualCntlr = this.isTouchDevice;
 
-      if(this.showVirtualCntlr) {
+      if (this.showVirtualCntlr) {
         this.createVirtualCntlr();
       } else {
         this.destroyVirtualCntlr();
@@ -82,12 +79,13 @@ class NESCntlr {
   }
 
   get isTouchDevice() {
-    return 'ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch;
+    let touchDetected = 'ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch;
+    return touchDetected ? true : false;
   }
 
   bindEvents() {
     window.addEventListener('orientationchange', e => this.refresh(e));
-    window.addEventListener('resize', () => debounce(300, e => this.refresh(e)));
+    window.addEventListener('resize', debounce(e => this.refresh(e), 300));
 		window.addEventListener('keydown', e => this.keyAction(e, true));
 		window.addEventListener('keyup', e => this.keyAction(e, false));
   }
@@ -96,7 +94,7 @@ class NESCntlr {
     e = e || window.event;
 
     if (!e.repeat) {
-      if(status)
+      if (status)
         this.keys.pressed[e.code] = true;
       else
         delete this.keys.pressed[e.code];
@@ -131,7 +129,7 @@ class NESCntlr {
   }
 
   createVirtualCntlr() {
-    if(typeof this.controller === 'undefined') {
+    if (typeof this.controller === 'undefined') {
       this.controller = new virtualCntlr(this.settings);
       this.controller.create();
 
@@ -141,40 +139,23 @@ class NESCntlr {
 
       this.setVirtualCntlrPos();
 
-      console.log(this.dom.el)
-
-      this.dom.el.addEventListener('touchstart', e => this.touchMove(e) );
-      this.dom.el.addEventListener('touchmove', e => this.touchMove(e) );
-      this.dom.el.addEventListener('touchend', () => this.touchEnd() );
-      this.dom.el.addEventListener('touchcancel', () => this.touchEnd() );
-
-      /*this.dom.dpad.addEventListener('touchstart', e => this.dpadMove(e) );
-      this.dom.dpad.addEventListener('touchmove', e => this.dpadMove(e) );*/
-      this.dom.dpad.addEventListener('touchend', () => this.dpadEnd() );
-      this.dom.dpad.addEventListener('touchcancel', () => this.dpadEnd() );
-
-      /*this.dom.btns.addEventListener('touchstart', e => this.btnsMove(e) );
-      this.dom.btns.addEventListener('touchmove', e => this.btnsMove(e) );*/
-      this.dom.btns.addEventListener('touchend', () => this.btnsEnd() );
-      this.dom.btns.addEventListener('touchcancel', () => this.btnsEnd() );
+      this.dom.el.addEventListener('touchstart', e => this.touchMove(e), false);
+      this.dom.el.addEventListener('touchmove', e => this.touchMove(e), false);
+      this.dom.el.addEventListener('touchend', e => this.touchEnd(e), false);
+      this.dom.el.addEventListener('touchcancel', e => this.touchEnd(e), false);
     }
   }
 
   destroyVirtualCntlr() {
-    if(typeof this.controller !== 'undefined') {
+    if (typeof this.controller !== 'undefined') {
       this.controller.destroy();
 
-      this.dom.dpad = this.dom.btns = null;
+      this.dom.el.removeEventListener('touchstart', e => this.touchMove(e), false);
+      this.dom.el.removeEventListener('touchmove', e => this.touchMove(e), false);
+      this.dom.el.removeEventListener('touchend', () => this.touchEnd(), false);
+      this.dom.el.removeEventListener('touchcancel', () => this.touchEnd(), false);
 
-      this.dom.dpad.removeEventListener('touchstart', e => this.dpadMove(e) );
-      this.dom.dpad.removeEventListener('touchmove', e => this.dpadMove(e) );
-      this.dom.dpad.removeEventListener('touchend', e => this.dpadEnd(e) );
-      this.dom.dpad.removeEventListener('touchcancel', e => this.dpadEnd(e) );
-
-      this.dom.btns.removeEventListener('touchstart', e => this.btnsMove(e) );
-      this.dom.btns.removeEventListener('touchmove', e => this.btnsMove(e) );
-      this.dom.btns.removeEventListener('touchend', e => this.btnsEnd(e) );
-      this.dom.btns.removeEventListener('touchcancel', e => this.btnsEnd(e) );
+      this.dom.el = null;
     }
   }
 
@@ -184,13 +165,17 @@ class NESCntlr {
   }
 
   setVirtualCntlrPos() {
-    if(this.dom.dpad && this.dom.btns) {
-      this.current.dpad.top = this.dom.dpad.getBoundingClientRect().y;
-      this.current.dpad.left = this.dom.dpad.getBoundingClientRect().x;
-      this.current.dpad.right = this.dom.dpad.getBoundingClientRect().right;
-      this.current.btns.top = this.dom.btns.getBoundingClientRect().y;
-      this.current.btns.left = this.dom.btns.getBoundingClientRect().x;
-      this.current.btns.right = this.dom.btns.getBoundingClientRect().right;
+    if (this.dom.dpad && this.dom.btns) {
+      const dpadRect = this.dom.dpad.getBoundingClientRect();
+      const btnsRect = this.dom.btns.getBoundingClientRect();
+
+      this.current.dpad.top = dpadRect.y;
+      this.current.dpad.left = dpadRect.x;
+      this.current.dpad.right = dpadRect.right;
+
+      this.current.btns.top = btnsRect.y;
+      this.current.btns.left = btnsRect.x;
+      this.current.btns.right = btnsRect.right;
     }
   }
 
@@ -206,49 +191,64 @@ class NESCntlr {
     });
   }
 
-  touchEnd() {
-    this.setTouchDirection();
+  touchEnd(e) {
+    if (this.current.dpad.active && this.current.btns.active) {
+      Array.from(e.changedTouches).forEach(t => {
+        if (t.pageX > this.current.dpad.left && t.pageX < this.current.dpad.right) {
+          this.setTouchDirection();
+        } else {
+          this.setTouchBtns();
+        }
+      });
+    } else if (this.current.dpad.active) {
+      this.setTouchDirection();
+    } else {
+      this.setTouchBtns();
+    }
   }
 
   dpadMove(e) {
     let posX = e.pageX - this.current.dpad.left;
     let posY = e.pageY - this.current.dpad.top;
+    let dir = null;
 
     if(posX >= 0 && posX <= 85 && posX && posY >= 0 && posY <= 88) {
-			if(posX < 28) { // Left
-				if(posY < 28)
-					this.setTouchDirection('up-left');
-				else if(posY < 59)
-					this.setTouchDirection('left');
-				else
-					this.setTouchDirection('down-left');
+      if (posX < 28) { // Left
+				if (posY < 28)      dir = 'up-left';
+				else if (posY < 59) dir = 'left';
+				else                dir = 'down-left';
 			} else if(posX < 58) { // Center
-				if(posY < 28)
-					this.setTouchDirection('up');
-				else if(posY < 59)
-					this.setTouchDirection();
-				else
-					this.setTouchDirection('down');
+				if (posY < 28)     dir = 'up';
+				else if(posY < 59) dir = null;
+				else               dir = 'down';
 			} else { // Right
-				if(posY < 28)
-					this.setTouchDirection('up-right');
-				else if(posY < 59)
-					this.setTouchDirection('right');
-				else
-					this.setTouchDirection('down-right');
+				if (posY < 28)     dir = 'up-right';
+				else if(posY < 59) dir = 'right';
+				else               dir = 'down-right';
 			}
-		} else {
-			this.setTouchDirection();
-		}
+		} 
+
+    this.setTouchDirection(dir);
 	}
 
-	dpadEnd() {
+  btnsMove(e) {
+		let posX = e.pageX - this.current.btns.left;
+		let posY = e.pageY - this.current.btns.top;
+    let btn = null;
 
+		if (posX >= 0 && posX <= 100 && posY >= 28 && posY <= 107) {
+			if (posY < 77) // first row
+				btn = posX < 50 ? 'b' : 'a';
+			else // second row
+				btn = posX < 50 ? 'select' : 'start';
+		}
+
+		this.setTouchBtns(btn);
 	}
 
 	setTouchDirection(direction = null) {
-		if(direction != null) { // Key down
-			if(this.current.dpad.active !== direction) { // Flag avoid repetition
+		if (direction != null) { // Key down
+			if (this.current.dpad.active !== direction) { // Flag avoid repetition
 				this.triggerEvent(this.dom.dpad, this.current.dpad.active, false);
 				this.current.dpad.active = direction;
 				this.triggerEvent(this.dom.dpad, this.current.dpad.active, true);
@@ -259,47 +259,27 @@ class NESCntlr {
 		}
 	}
 
-	btnsMove(e) {
-		let posX = e.pageX - this.current.btns.left;
-		let posY = e.pageY - this.current.btns.top;
-
-		if(posX >= 0 && posX <= 100 && posY >= 28 && posY <= 107) {
-			let btn = null;
-
-			if(posY < 77) // first row
-				btn = posX < 50 ? 'b' : 'a';
-			else // second row
-				btn = posX < 50 ? 'select' : 'start';
-      
-      if (this.current.btns.prev !== btn) {
-        this.setTouchBtns(this.current.btns.prev, false);
-        this.setTouchBtns(btn, true);
-        this.current.btns.prev = btn;
+  setTouchBtns(btn = null, pressed = null) {
+    if (btn != null && pressed != false) { // Key down
+      if (this.current.btns.active !== btn) { // Flag avoid repetition
+        this.triggerEvent(this.dom.btns, this.current.btns.active, false);
+        this.current.btns.active = btn;
+        this.triggerEvent(this.dom.btns, btn, true);
       }
-		} else {
-			this.setTouchBtns();
-		}
-	}
-
-	btnsEnd() {
-    if (this.current.btns.prev != null) {
-      this.setTouchBtns(this.current.btns.prev, false);
+    } else { // Released
+      this.triggerEvent(this.dom.btns, this.current.btns.active, false);
+      this.current.btns.active = null;
     }
-    this.current.btns.prev = null;
-	}
-
-	setTouchBtns(btn = null, status = false) {
-    this.triggerEvent(this.dom.btns, btn, status);
 	}
 
 	triggerEvent(el, btn, status) {
-		if(btn !== null && btn !== '') {
+		if (btn !== null && btn !== '') {
 			let params = {
         pressed: status,
         btn: btn
       };
 
-			if(status) {
+			if (status) {
 				this.timming[btn] = new Date();
 			} else {
 				params.duration = new Date() - this.timming[btn];
@@ -309,10 +289,10 @@ class NESCntlr {
 			document.dispatchEvent(event);
 		}
 
-		if(this.showVirtualCntlr && el) {
+		if (this.showVirtualCntlr && el) {
 			el.classList = el.getAttribute('data-default-class');
 
-			if(status) {
+			if (status) {
 				el.classList.add(`is-${btn}`);
       }
 		}

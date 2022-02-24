@@ -12,7 +12,9 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 - [Basic - Vanilla Javascript](https://codepen.io/sarnold/pen/BGzrrV)
 - [Basic - jQuery](https://codepen.io/sarnold/pen/RqRMvx)
 - [Multiplayers](https://codepen.io/sarnold/pen/MzeVdW?)
+- [Punch-Out!! - Little Mac Example](https://codepen.io/smnarnold/full/qBVKEYe)
 - [Collection](https://codepen.io/collection/nvmVVg/)
+
 
 ### Usage
 
@@ -61,7 +63,7 @@ nes-cntlr works on all modern browsers such as Chrome, Firefox, Edge and Safari.
 
 #### Dependencies
 
- - [throttle-debounce](https://www.npmjs.com/package/throttle-debounce)
+ - [Lodash - Debounce](https://lodash.com/docs/4.17.15#debounce)
 
 #### License
 

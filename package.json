@@ -9,7 +9,9 @@
     "start": "webpack",
     "dev": "webpack"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "Nintendo",
     "NES",
@@ -17,7 +19,7 @@
     "Retro"
   ],
   "dependencies": {
-    "throttle-debounce": "^3.0.1"
+    "lodash": "^4.17.21"
   },
   "repository": {
     "type": "git",
