@@ -84,8 +84,8 @@ class NESCntlr {
   }
 
   bindEvents() {
-    window.addEventListener('orientationchange', e => this.refresh(e));
-    window.addEventListener('resize', debounce(e => this.refresh(e), 300));
+    window.addEventListener('orientationchange', () => this.refresh());
+    window.addEventListener('resize', debounce(() => this.refresh(), 300));
 		window.addEventListener('keydown', e => this.keyAction(e, true));
 		window.addEventListener('keyup', e => this.keyAction(e, false));
   }

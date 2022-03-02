@@ -8,11 +8,12 @@ Allow you to use your keyboard and/or a virtual NES Controller _(for touch devic
 
 `npm i nes-cntlr`
 
-### Demo
+### Demos
 - [Basic - Vanilla Javascript](https://codepen.io/sarnold/pen/BGzrrV)
 - [Basic - jQuery](https://codepen.io/sarnold/pen/RqRMvx)
 - [Multiplayers](https://codepen.io/sarnold/pen/MzeVdW?)
-- [Punch-Out!! - Little Mac Example](https://codepen.io/smnarnold/full/qBVKEYe)
+- [Punch-Out!! - Menu](https://codepen.io/smnarnold/full/zYPmrBw)
+- [Punch-Out!! - Little Mac](https://codepen.io/smnarnold/full/qBVKEYe)
 - [Collection](https://codepen.io/collection/nvmVVg/)
 
 
@@ -55,7 +56,6 @@ location | string | 'body' | Allows you to select where the virtual controller s
 prefix | string | 'player1' | Class prefix
 virtual | string | 'auto' | 'auto', 'never' or 'always' show virtual controller.
 zIndex | number | 100 | z-index of the virtual controller.
-
 
 #### Browser support
 

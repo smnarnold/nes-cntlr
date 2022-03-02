@@ -1,14 +1,20 @@
+import debounce from 'lodash/debounce';
+
 class VirtualCntlr {
 	constructor(settings) {
 		this.settings = settings;
+
+		this.dom = {};
 	}
 
 	create() {
-		if(this.settings.styles.inline) {
+		if (this.settings.styles.inline) {
 			this.setStyles();
     }
 
 		this.setHtml();
+		this.refresh();
+		this.bindEvents();
 	}
 
 	destroy() {
@@ -23,7 +29,7 @@ class VirtualCntlr {
 		let css = `
 			.cntlr {
 				position: fixed;
-				bottom: 50px;
+				bottom: 0;
 				left: 0;
 				width: 100%;
 				display: flex;
@@ -52,7 +58,6 @@ class VirtualCntlr {
     let head = document.head;
     let style = document.createElement('style');
 
-  	style.type = 'text/css';
   	style.classList.add(`${this.settings.prefix}-styles`);
 		style.appendChild( document.createTextNode(css) );
 		head.appendChild(style);
@@ -79,7 +84,26 @@ class VirtualCntlr {
 			</nav>`;
 
 		document.querySelector(this.settings.location).insertAdjacentHTML('beforeend', controller);
+		this.dom.el = document.querySelector(this.settings.location).querySelector(`.${this.settings.prefix}-cntlr`);
 	}
+
+	bindEvents() {
+		window.addEventListener('orientationchange', e => this.refresh(e));
+    window.addEventListener('resize', debounce(e => this.refresh(e), 300));
+	}
+
+	refresh() {
+		let bottomOffset = '0';
+		if (this.isTouchDevice && window.innerWidth < 992) {
+			bottomOffset = '50px';
+		}
+		this.dom.el.style.bottom = bottomOffset;
+	}
+
+	get isTouchDevice() {
+    let touchDetected = 'ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch;
+    return touchDetected ? true : false;
+  }
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
@@ -92,3 +116,5 @@ else {
     } else
         window.VirtualCntlr = VirtualCntlr;
 }
+
+export default VirtualCntlr;
